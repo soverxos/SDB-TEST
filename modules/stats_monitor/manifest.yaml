@@ -1,0 +1,37 @@
+# modules/stats_monitor/manifest.yaml
+name: "stats_monitor"
+display_name: "Монитор Статистики"
+version: "0.1.0"
+description: "Модуль для мониторинга статистики использования бота (в разработке)."
+author: "SwiftDevBot Team"
+
+python_requirements: []
+sdb_module_dependencies: []
+
+model_definitions: []
+
+commands: []
+
+permissions: 
+  - name: "stats_monitor.access_user_features"
+    description: "Доступ к основному пользовательскому интерфейсу модуля Статистика."
+  - name: "stats_monitor.view_stats"
+    description: "Просмотр статистики использования бота."
+  - name: "stats_monitor.admin_manage"
+    description: "[АДМИН] Административные действия для модуля Статистика."
+
+settings: {}
+
+metadata:
+  min_sdb_core_version: "0.1.0"
+  tags: ["monitoring", "statistics", "analytics", "development"]
+  development_status: "placeholder"  # Указываем, что модуль в разработке
+  # Старая схема (для обратной совместимости)
+  assign_default_access_to_user_role: false
+  # Новая расширенная схема автоназначения разрешений
+  auto_assign_permissions:
+    - role: "Admin"
+      permissions:
+        - "stats_monitor.access_user_features"
+        - "stats_monitor.view_stats"
+        - "stats_monitor.admin_manage"

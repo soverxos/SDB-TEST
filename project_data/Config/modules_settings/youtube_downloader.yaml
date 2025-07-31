@@ -1,0 +1,13 @@
+max_downloads_per_day: 10
+max_file_size_mb: 100
+allow_playlists: false
+default_video_quality: 720p
+default_audio_quality: '192'
+download_directory: project_data/downloads/youtube
+auto_cleanup_days: 7
+keep_failed_downloads: false
+notify_on_completion: true
+notify_on_failure: true
+extract_thumbnails: false
+extract_subtitles: false
+write_info_json: false

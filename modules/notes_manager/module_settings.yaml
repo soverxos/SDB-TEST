@@ -1,0 +1,4 @@
+# modules/example_module/module_settings.yaml
+example_setting_string: "111Дефолтное значение из файла example_module/module_settings.yaml"
+example_setting_bool: false
+# Добавь сюда другие настройки, если они есть в манифесте example_module

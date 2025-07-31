@@ -1,0 +1,463 @@
+2025-07-31 09:00:23.106 | SUCCESS  | core.logging_manager:_setup_loguru_file_sink:81 - Файловый логгер настроен. Уровень: DEBUG. Файл: /root/SDB/SwiftDevBot-Lite/project_data/Logs/2025/07-July/31/09_sdb.log
+2025-07-31 09:00:23.110 | INFO     | core.logging_manager:initialize_logging:175 - Задача _hourly_log_rotation_check добавлена в планировщик (ежечасно).
+2025-07-31 09:00:23.111 | INFO     | core.logging_manager:initialize_logging:177 - Задача _cleanup_old_logs добавлена в планировщик (ежедневно в 03:30 UTC).
+2025-07-31 09:00:23.114 | SUCCESS  | core.logging_manager:initialize_logging:181 - Планировщик задач LoggingManager успешно запущен.
+2025-07-31 09:00:23.115 | INFO     | core.logging_manager:initialize_logging:187 - LoggingManager успешно инициализирован.
+2025-07-31 09:00:23.115 | INFO     | core.bot_entrypoint:run_sdb_bot:124 - Система логирования инициализирована. Уровень консольного лога: INFO (может быть переопределен SDB_CLI_DEBUG_MODE_FOR_LOGGING). Уровень файлового лога всегда DEBUG (или TRACE, если так задано в LoggingManager).
+2025-07-31 09:00:23.116 | INFO     | core.bot_entrypoint:run_sdb_bot:128 - 🚀 Запуск SwiftDevBot (SDB) v0.1.0 в 2025-07-31 09:00:23 UTC...
+2025-07-31 09:00:23.117 | INFO     | core.bot_entrypoint:run_sdb_bot:129 - 🐍 Используется Python v3.12.3
+2025-07-31 09:00:23.117 | INFO     | core.bot_entrypoint:run_sdb_bot:130 - 🤖 Используется Aiogram v3.21.0
+2025-07-31 09:00:23.118 | DEBUG    | core.bot_entrypoint:run_sdb_bot:131 - Каталог запуска (CWD): /root/SDB/SwiftDevBot-Lite
+2025-07-31 09:00:23.118 | DEBUG    | core.bot_entrypoint:run_sdb_bot:132 - Корень проекта: /root/SDB/SwiftDevBot-Lite
+2025-07-31 09:00:23.119 | DEBUG    | core.bot_entrypoint:run_sdb_bot:133 - Директория данных проекта: /root/SDB/SwiftDevBot-Lite/project_data
+2025-07-31 09:00:23.119 | INFO     | core.services_provider:__init__:33 - BotServicesProvider создан (версия SDB: 0.1.0). Ожидает настройки сервисов.
+2025-07-31 09:00:23.119 | INFO     | core.services_provider:setup_services:36 - Начало асинхронной настройки основных сервисов SDB...
+2025-07-31 09:00:23.127 | INFO     | core.database.manager:__init__:31 - DBManager инициализирован для типа БД: sqlite
+2025-07-31 09:00:23.130 | DEBUG    | core.database.manager:_build_db_url:56 - Окончательный абсолютный путь для SQLite: /root/SDB/SwiftDevBot-Lite/project_data/Database_files/sdb.db
+2025-07-31 09:00:23.130 | INFO     | core.database.manager:initialize:87 - Инициализация асинхронного движка SQLAlchemy для URL: 'sqlite+aiosqlite://...' (детали URL скрыты)
+2025-07-31 09:00:23.173 | SUCCESS  | core.database.manager:initialize:105 - SQLAlchemy AsyncEngine и SessionFactory успешно созданы.
+2025-07-31 09:00:23.173 | SUCCESS  | core.services_provider:setup_services:42 - Сервис DBManager успешно настроен.
+2025-07-31 09:00:23.175 | INFO     | core.module_loader:__init__:71 - ModuleLoader инициализирован. Плагины: /root/SDB/SwiftDevBot-Lite/modules, Системные модули: /root/SDB/SwiftDevBot-Lite/core/sys_modules, Пользовательские настройки модулей: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings
+2025-07-31 09:00:23.175 | INFO     | core.module_loader:scan_all_available_modules:257 - Начало сканирования всех модулей...
+2025-07-31 09:00:23.187 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'stats_monitor' (v0.1.0) в 'stats_monitor'.
+2025-07-31 09:00:23.205 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'youtube_downloader' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/youtube_downloader.yaml
+2025-07-31 09:00:23.206 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'youtube_downloader' загружены и провалидированы.
+2025-07-31 09:00:23.206 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'youtube_downloader': {'max_downloads_per_day': 10, 'max_file_size_mb': 100, 'allow_playlists': False}
+2025-07-31 09:00:23.206 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'youtube_downloader' (v1.0.0) в 'youtube_downloader'.
+2025-07-31 09:00:23.212 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes' (v0.1.0) в 'notes'.
+2025-07-31 09:00:23.229 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'notes_manager' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/notes_manager.yaml
+2025-07-31 09:00:23.229 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'notes_manager' загружены и провалидированы.
+2025-07-31 09:00:23.230 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'notes_manager': {'max_notes_per_user': 100}
+2025-07-31 09:00:23.230 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes_manager' (v1.0.0) в 'notes_manager'.
+2025-07-31 09:00:23.235 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'task_manager' (v0.1.0) в 'task_manager'.
+2025-07-31 09:00:23.237 | INFO     | core.module_loader:scan_all_available_modules:260 - Сканирование всех модулей завершено. Всего найдено: 5
+2025-07-31 09:00:23.237 | WARNING  | core.module_loader:_load_enabled_plugin_names:282 - Файл со списком активных плагинов Config/enabled_modules.json не найден.
+2025-07-31 09:00:23.238 | SUCCESS  | core.services_provider:setup_services:53 - Сервис ModuleLoader инициализирован (найдено 5 модулей, активно плагинов 0).
+2025-07-31 09:00:23.238 | INFO     | core.rbac.service:__init__:127 - RBACService инициализирован.
+2025-07-31 09:00:23.239 | INFO     | core.rbac.service:ensure_default_entities_exist:194 - Проверка и создание стандартных сущностей RBAC (роли, разрешения ядра, разрешения модулей)...
+2025-07-31 09:00:23.240 | DEBUG    | core.rbac.service:ensure_default_entities_exist:201 - Этап 1: Создание/получение стандартных разрешений ЯДРА.
+2025-07-31 09:00:23.476 | DEBUG    | core.rbac.service:ensure_default_entities_exist:215 - Этап 2: Регистрация разрешений из МАНИФЕСТОВ МОДУЛЕЙ.
+2025-07-31 09:00:23.476 | INFO     | core.module_loader:get_all_declared_permissions_from_active_modules:438 - Не найдено разрешений, объявленных в активных/системных модулях.
+2025-07-31 09:00:23.477 | INFO     | core.rbac.service:register_permissions_from_modules:166 - Не найдено разрешений, объявленных в активных модулях, для регистрации.
+2025-07-31 09:00:23.478 | DEBUG    | core.rbac.service:ensure_default_entities_exist:222 - Этап 3: Создание/получение стандартных РОЛЕЙ.
+2025-07-31 09:00:23.518 | DEBUG    | core.rbac.service:ensure_default_entities_exist:246 - Этап 5: Назначение разрешений ЯДРА стандартным ролям.
+2025-07-31 09:00:23.530 | DEBUG    | core.rbac.service:get_all_permissions:664 - Запрошен список всех разрешений. Найдено: 38.
+2025-07-31 09:00:23.550 | INFO     | core.rbac.service:ensure_default_entities_exist:266 - Назначение ядерных разрешений роли 'Admin' (ID: 3)...
+2025-07-31 09:00:23.595 | INFO     | core.rbac.service:ensure_default_entities_exist:266 - Назначение ядерных разрешений роли 'Moderator' (ID: 2)...
+2025-07-31 09:00:23.617 | INFO     | core.rbac.service:ensure_default_entities_exist:266 - Назначение ядерных разрешений роли 'User' (ID: 1)...
+2025-07-31 09:00:23.618 | DEBUG    | core.rbac.service:ensure_default_entities_exist:282 - Этап 5.1: Автоматическое назначение базовых прав модулей роли 'User'.
+2025-07-31 09:00:23.641 | WARNING  | core.rbac.service:ensure_default_entities_exist:336 - Не найдено зарегистрированное разрешение 'stats_monitor.access_user_features' для модуля 'stats_monitor'
+2025-07-31 09:00:23.642 | WARNING  | core.rbac.service:ensure_default_entities_exist:336 - Не найдено зарегистрированное разрешение 'stats_monitor.view_stats' для модуля 'stats_monitor'
+2025-07-31 09:00:23.642 | WARNING  | core.rbac.service:ensure_default_entities_exist:336 - Не найдено зарегистрированное разрешение 'stats_monitor.admin_manage' для модуля 'stats_monitor'
+2025-07-31 09:00:23.821 | INFO     | core.rbac.service:ensure_default_entities_exist:366 - Не было обнаружено фактических изменений в RBAC для коммита.
+2025-07-31 09:00:23.821 | INFO     | core.services_provider:setup_services:68 - RBACService.ensure_default_entities_exist отработал. Ролей создано: 0, Разрешений ядра: 0, Разрешений модулей: 0
+2025-07-31 09:00:23.825 | SUCCESS  | core.services_provider:setup_services:72 - Сервис RBACService успешно настроен.
+2025-07-31 09:00:23.825 | INFO     | core.users.service:__init__:24 - UserService инициализирован.
+2025-07-31 09:00:23.826 | SUCCESS  | core.services_provider:setup_services:83 - Сервис UserService успешно настроен.
+2025-07-31 09:00:23.843 | INFO     | core.cache.manager:__init__:242 - CacheManager инициализирован. Сконфигурированный тип кэша: memory
+2025-07-31 09:00:23.844 | INFO     | core.cache.manager:__init__:60 - MemoryCache инициализирован (использует cachetools: True, default TTL: 300s).
+2025-07-31 09:00:23.844 | DEBUG    | core.cache.manager:initialize:62 - MemoryCache.initialize() - операция не требуется.
+2025-07-31 09:00:23.844 | SUCCESS  | core.cache.manager:initialize:277 - Бэкенд кэша 'memory' успешно инициализирован.
+2025-07-31 09:00:23.845 | SUCCESS  | core.services_provider:setup_services:93 - Сервис CacheManager (memory) успешно настроен.
+2025-07-31 09:00:23.853 | INFO     | core.http_client.manager:__init__:37 - HTTPClientManager инициализирован (таймаут по умолчанию: 10 сек).
+2025-07-31 09:00:23.854 | SUCCESS  | core.http_client.manager:initialize:44 - aiohttp.ClientSession успешно создан и инициализирован.
+2025-07-31 09:00:23.855 | SUCCESS  | core.services_provider:setup_services:107 - Сервис HTTPClientManager успешно настроен.
+2025-07-31 09:00:23.862 | INFO     | core.events.dispatcher:__init__:26 - EventDispatcher инициализирован.
+2025-07-31 09:00:23.863 | SUCCESS  | core.services_provider:setup_services:119 - Сервис EventDispatcher успешно инициализирован.
+2025-07-31 09:00:23.864 | INFO     | core.ui.registry_ui:__init__:44 - UIRegistry инициализирован.
+2025-07-31 09:00:23.865 | SUCCESS  | core.services_provider:setup_services:127 - Сервис UIRegistry успешно инициализирован.
+2025-07-31 09:00:23.865 | INFO     | core.services_provider:setup_services:134 - ✅ Первичная настройка всех основных сервисов SDB завершена.
+2025-07-31 09:00:23.866 | SUCCESS  | core.bot_entrypoint:run_sdb_bot:168 - ✅ BotServicesProvider и все его базовые сервисы успешно инициализированы.
+2025-07-31 09:00:24.179 | INFO     | core.bot_entrypoint:run_sdb_bot:175 - 🤖 Экземпляр Telegram Bot успешно создан: @SDBTest_Bot (ID: 7271638908)
+2025-07-31 09:00:24.180 | INFO     | core.bot_entrypoint:run_sdb_bot:190 - FSM Storage: используется MemoryStorage.
+2025-07-31 09:00:24.181 | INFO     | core.bot_entrypoint:run_sdb_bot:193 - 🚦 Dispatcher и FSM Storage инициализированы.
+2025-07-31 09:00:24.182 | INFO     | core.i18n.translator:__init__:55 - Translator инициализирован. Locales dir: '/root/SDB/SwiftDevBot-Lite/locales', Domain: 'bot', Default: 'en', Available: ['en', 'ua', 'ru']
+2025-07-31 09:00:24.183 | INFO     | core.i18n.translator:load_all_translations:93 - Предзагрузка всех доступных переводов (['en', 'ua', 'ru'])...
+2025-07-31 09:00:24.185 | WARNING  | core.i18n.translator:load_translation:83 - Файл перевода .mo для языка 'en' (домен 'bot') не найден в '/root/SDB/SwiftDevBot-Lite/locales'.
+2025-07-31 09:00:24.186 | WARNING  | core.i18n.translator:load_translation:83 - Файл перевода .mo для языка 'ua' (домен 'bot') не найден в '/root/SDB/SwiftDevBot-Lite/locales'.
+2025-07-31 09:00:24.188 | WARNING  | core.i18n.translator:load_translation:83 - Файл перевода .mo для языка 'ru' (домен 'bot') не найден в '/root/SDB/SwiftDevBot-Lite/locales'.
+2025-07-31 09:00:24.189 | INFO     | core.bot_entrypoint:run_sdb_bot:202 - I18nMiddleware зарегистрирован для всех Update.
+2025-07-31 09:00:24.189 | INFO     | core.bot_entrypoint:run_sdb_bot:205 - UserStatusMiddleware зарегистрирован для всех Update.
+2025-07-31 09:00:24.190 | INFO     | core.bot_entrypoint:run_sdb_bot:208 - Базовый UI-роутер ядра 'sdb_core_ui_handlers' зарегистрирован.
+2025-07-31 09:00:24.191 | INFO     | core.bot_entrypoint:run_sdb_bot:212 - ✅ Главный админ-роутер 'sdb_admin_top_level_router' успешно зарегистрирован
+2025-07-31 09:00:24.192 | INFO     | core.module_loader:scan_all_available_modules:257 - Начало сканирования всех модулей...
+2025-07-31 09:00:24.204 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'stats_monitor' (v0.1.0) в 'stats_monitor'.
+2025-07-31 09:00:24.241 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'youtube_downloader' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/youtube_downloader.yaml
+2025-07-31 09:00:24.242 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'youtube_downloader' загружены и провалидированы.
+2025-07-31 09:00:24.243 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'youtube_downloader': {'max_downloads_per_day': 10, 'max_file_size_mb': 100, 'allow_playlists': False}
+2025-07-31 09:00:24.244 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'youtube_downloader' (v1.0.0) в 'youtube_downloader'.
+2025-07-31 09:00:24.265 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes' (v0.1.0) в 'notes'.
+2025-07-31 09:00:24.292 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'notes_manager' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/notes_manager.yaml
+2025-07-31 09:00:24.293 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'notes_manager' загружены и провалидированы.
+2025-07-31 09:00:24.293 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'notes_manager': {'max_notes_per_user': 100}
+2025-07-31 09:00:24.293 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes_manager' (v1.0.0) в 'notes_manager'.
+2025-07-31 09:00:24.300 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'task_manager' (v0.1.0) в 'task_manager'.
+2025-07-31 09:00:24.302 | INFO     | core.module_loader:scan_all_available_modules:260 - Сканирование всех модулей завершено. Всего найдено: 5
+2025-07-31 09:00:24.303 | WARNING  | core.module_loader:_load_enabled_plugin_names:282 - Файл со списком активных плагинов Config/enabled_modules.json не найден.
+2025-07-31 09:00:24.304 | INFO     | core.module_loader:initialize_and_setup_modules:345 - Настройка системных модулей ядра...
+2025-07-31 09:00:24.305 | INFO     | core.module_loader:initialize_and_setup_modules:352 - Настройка системных модулей ядра завершена.
+2025-07-31 09:00:24.306 | INFO     | core.module_loader:initialize_and_setup_modules:354 - Нет активных плагинов для настройки.
+2025-07-31 09:00:24.307 | DEBUG    | core.bot_entrypoint:_setup_bot_commands:68 - [CoreBotSetup] Начало установки команд бота в Telegram...
+2025-07-31 09:00:24.412 | SUCCESS  | core.bot_entrypoint:_setup_bot_commands:101 - [CoreBotSetup] Установлено 3 команд бота в Telegram: ['start', 'help', 'admin']
+2025-07-31 09:00:24.470 | INFO     | core.bot_entrypoint:run_sdb_bot:263 - 📡 Запуск Telegram Bot Polling для @SDBTest_Bot...
+2025-07-31 09:00:24.516 | INFO     | core.bot_entrypoint:on_bot_startup:226 - ⚡ Событие startup для Dispatcher (бот: @SDBTest_Bot)...
+2025-07-31 09:00:24.517 | INFO     | core.admin_auto_setup:initialize:109 - 🔧 Проверка супер администратора...
+2025-07-31 09:00:24.517 | WARNING  | core.admin_auto_setup:ensure_super_admin_exists:45 - Супер администратор не настроен! Укажите SUPER_ADMIN_TELEGRAM_ID в .env или admin.super_admin_telegram_id в config.yaml
+2025-07-31 09:00:24.518 | ERROR    | core.admin_auto_setup:initialize:126 - ❌ Не удалось настроить супер администратора
+2025-07-31 09:00:24.518 | CRITICAL | core.bot_entrypoint:run_sdb_bot:272 - ❌ КРИТИЧЕСКАЯ ОШИБКА в основной функции run_sdb_bot: a coroutine was expected, got None
+2025-07-31 09:00:24.519 | INFO     | core.bot_entrypoint:run_sdb_bot:275 - Блок finally в run_sdb_bot.
+2025-07-31 09:00:24.519 | INFO     | core.services_provider:close_services:138 - Начало процедуры закрытия и освобождения ресурсов сервисов SDB...
+2025-07-31 09:00:24.519 | DEBUG    | core.services_provider:close_services:140 - ModuleLoader не требует специального dispose().
+2025-07-31 09:00:24.520 | INFO     | core.ui.registry_ui:dispose:103 - UIRegistry очищен (все UI-точки входа модулей удалены).
+2025-07-31 09:00:24.520 | INFO     | core.services_provider:close_services:142 - UIRegistry ресурсы освобождены.
+2025-07-31 09:00:24.520 | INFO     | core.events.dispatcher:dispose:132 - EventDispatcher очищен (все подписчики и списки событий удалены).
+2025-07-31 09:00:24.521 | INFO     | core.services_provider:close_services:145 - EventDispatcher ресурсы освобождены.
+2025-07-31 09:00:24.521 | INFO     | core.http_client.manager:dispose:57 - aiohttp.ClientSession успешно закрыт.
+2025-07-31 09:00:24.522 | INFO     | core.services_provider:close_services:148 - HTTPClientManager ресурсы освобождены.
+2025-07-31 09:00:24.522 | INFO     | core.cache.manager:clear:112 - MemoryCache очищен.
+2025-07-31 09:00:24.523 | DEBUG    | core.cache.manager:dispose:63 - MemoryCache.dispose() - кэш очищен.
+2025-07-31 09:00:24.523 | INFO     | core.cache.manager:dispose:288 - Ресурсы CacheManager для бэкенда 'memory' освобождены (или попытка освобождения).
+2025-07-31 09:00:24.524 | INFO     | core.services_provider:close_services:151 - CacheManager ресурсы освобождены.
+2025-07-31 09:00:24.525 | DEBUG    | core.services_provider:close_services:154 - UserService не требует специального dispose().
+2025-07-31 09:00:24.526 | DEBUG    | core.services_provider:close_services:155 - RBACService не требует специального dispose().
+2025-07-31 09:00:24.526 | INFO     | core.database.manager:dispose:114 - Закрытие SQLAlchemy AsyncEngine...
+2025-07-31 09:00:24.527 | SUCCESS  | core.database.manager:dispose:117 - SQLAlchemy AsyncEngine успешно закрыт.
+2025-07-31 09:00:24.528 | INFO     | core.services_provider:close_services:158 - DBManager ресурсы освобождены.
+2025-07-31 09:00:24.528 | INFO     | core.services_provider:close_services:161 - 🏁 Процедура закрытия всех сервисов SDB завершена.
+2025-07-31 09:00:24.529 | INFO     | core.logging_manager:shutdown_logging:191 - Начало процедуры остановки LoggingManager...
+2025-07-31 09:00:24.530 | INFO     | core.logging_manager:shutdown_logging:195 - Планировщик задач LoggingManager остановлен.
+2025-07-31 09:06:27.645 | SUCCESS  | core.logging_manager:_setup_loguru_file_sink:81 - Файловый логгер настроен. Уровень: DEBUG. Файл: /root/SDB/SwiftDevBot-Lite/project_data/Logs/2025/07-July/31/09_sdb.log
+2025-07-31 09:06:27.649 | INFO     | core.logging_manager:initialize_logging:175 - Задача _hourly_log_rotation_check добавлена в планировщик (ежечасно).
+2025-07-31 09:06:27.650 | INFO     | core.logging_manager:initialize_logging:177 - Задача _cleanup_old_logs добавлена в планировщик (ежедневно в 03:30 UTC).
+2025-07-31 09:06:27.652 | SUCCESS  | core.logging_manager:initialize_logging:181 - Планировщик задач LoggingManager успешно запущен.
+2025-07-31 09:06:27.653 | INFO     | core.logging_manager:initialize_logging:187 - LoggingManager успешно инициализирован.
+2025-07-31 09:06:27.653 | INFO     | core.bot_entrypoint:run_sdb_bot:120 - Система логирования инициализирована. Уровень консольного лога: INFO (может быть переопределен SDB_CLI_DEBUG_MODE_FOR_LOGGING). Уровень файлового лога всегда DEBUG (или TRACE, если так задано в LoggingManager).
+2025-07-31 09:06:27.654 | INFO     | core.bot_entrypoint:run_sdb_bot:124 - 🚀 Запуск SwiftDevBot (SDB) v0.1.0 в 2025-07-31 09:06:27 UTC...
+2025-07-31 09:06:27.654 | INFO     | core.bot_entrypoint:run_sdb_bot:125 - 🐍 Используется Python v3.12.3
+2025-07-31 09:06:27.655 | INFO     | core.bot_entrypoint:run_sdb_bot:126 - 🤖 Используется Aiogram v3.21.0
+2025-07-31 09:06:27.655 | DEBUG    | core.bot_entrypoint:run_sdb_bot:127 - Каталог запуска (CWD): /root/SDB/SwiftDevBot-Lite
+2025-07-31 09:06:27.656 | DEBUG    | core.bot_entrypoint:run_sdb_bot:128 - Корень проекта: /root/SDB/SwiftDevBot-Lite
+2025-07-31 09:06:27.656 | DEBUG    | core.bot_entrypoint:run_sdb_bot:129 - Директория данных проекта: /root/SDB/SwiftDevBot-Lite/project_data
+2025-07-31 09:06:27.656 | INFO     | core.services_provider:__init__:33 - BotServicesProvider создан (версия SDB: 0.1.0). Ожидает настройки сервисов.
+2025-07-31 09:06:27.657 | INFO     | core.services_provider:setup_services:36 - Начало асинхронной настройки основных сервисов SDB...
+2025-07-31 09:06:27.659 | INFO     | core.database.manager:__init__:31 - DBManager инициализирован для типа БД: sqlite
+2025-07-31 09:06:27.661 | DEBUG    | core.database.manager:_build_db_url:56 - Окончательный абсолютный путь для SQLite: /root/SDB/SwiftDevBot-Lite/project_data/Database_files/sdb.db
+2025-07-31 09:06:27.661 | INFO     | core.database.manager:initialize:87 - Инициализация асинхронного движка SQLAlchemy для URL: 'sqlite+aiosqlite://...' (детали URL скрыты)
+2025-07-31 09:06:27.680 | SUCCESS  | core.database.manager:initialize:105 - SQLAlchemy AsyncEngine и SessionFactory успешно созданы.
+2025-07-31 09:06:27.680 | SUCCESS  | core.services_provider:setup_services:42 - Сервис DBManager успешно настроен.
+2025-07-31 09:06:27.682 | INFO     | core.module_loader:__init__:71 - ModuleLoader инициализирован. Плагины: /root/SDB/SwiftDevBot-Lite/modules, Системные модули: /root/SDB/SwiftDevBot-Lite/core/sys_modules, Пользовательские настройки модулей: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings
+2025-07-31 09:06:27.682 | INFO     | core.module_loader:scan_all_available_modules:257 - Начало сканирования всех модулей...
+2025-07-31 09:06:27.691 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'stats_monitor' (v0.1.0) в 'stats_monitor'.
+2025-07-31 09:06:27.708 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'youtube_downloader' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/youtube_downloader.yaml
+2025-07-31 09:06:27.709 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'youtube_downloader' загружены и провалидированы.
+2025-07-31 09:06:27.709 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'youtube_downloader': {'max_downloads_per_day': 10, 'max_file_size_mb': 100, 'allow_playlists': False}
+2025-07-31 09:06:27.710 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'youtube_downloader' (v1.0.0) в 'youtube_downloader'.
+2025-07-31 09:06:27.715 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes' (v0.1.0) в 'notes'.
+2025-07-31 09:06:27.732 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'notes_manager' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/notes_manager.yaml
+2025-07-31 09:06:27.733 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'notes_manager' загружены и провалидированы.
+2025-07-31 09:06:27.733 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'notes_manager': {'max_notes_per_user': 100}
+2025-07-31 09:06:27.734 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes_manager' (v1.0.0) в 'notes_manager'.
+2025-07-31 09:06:27.740 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'task_manager' (v0.1.0) в 'task_manager'.
+2025-07-31 09:06:27.741 | INFO     | core.module_loader:scan_all_available_modules:260 - Сканирование всех модулей завершено. Всего найдено: 5
+2025-07-31 09:06:27.741 | WARNING  | core.module_loader:_load_enabled_plugin_names:282 - Файл со списком активных плагинов Config/enabled_modules.json не найден.
+2025-07-31 09:06:27.742 | SUCCESS  | core.services_provider:setup_services:53 - Сервис ModuleLoader инициализирован (найдено 5 модулей, активно плагинов 0).
+2025-07-31 09:06:27.743 | INFO     | core.rbac.service:__init__:127 - RBACService инициализирован.
+2025-07-31 09:06:27.744 | INFO     | core.rbac.service:ensure_default_entities_exist:194 - Проверка и создание стандартных сущностей RBAC (роли, разрешения ядра, разрешения модулей)...
+2025-07-31 09:06:27.744 | DEBUG    | core.rbac.service:ensure_default_entities_exist:201 - Этап 1: Создание/получение стандартных разрешений ЯДРА.
+2025-07-31 09:06:27.989 | DEBUG    | core.rbac.service:ensure_default_entities_exist:215 - Этап 2: Регистрация разрешений из МАНИФЕСТОВ МОДУЛЕЙ.
+2025-07-31 09:06:27.989 | INFO     | core.module_loader:get_all_declared_permissions_from_active_modules:438 - Не найдено разрешений, объявленных в активных/системных модулях.
+2025-07-31 09:06:27.990 | INFO     | core.rbac.service:register_permissions_from_modules:166 - Не найдено разрешений, объявленных в активных модулях, для регистрации.
+2025-07-31 09:06:27.990 | DEBUG    | core.rbac.service:ensure_default_entities_exist:222 - Этап 3: Создание/получение стандартных РОЛЕЙ.
+2025-07-31 09:06:28.036 | DEBUG    | core.rbac.service:ensure_default_entities_exist:246 - Этап 5: Назначение разрешений ЯДРА стандартным ролям.
+2025-07-31 09:06:28.053 | DEBUG    | core.rbac.service:get_all_permissions:664 - Запрошен список всех разрешений. Найдено: 38.
+2025-07-31 09:06:28.069 | INFO     | core.rbac.service:ensure_default_entities_exist:266 - Назначение ядерных разрешений роли 'Admin' (ID: 3)...
+2025-07-31 09:06:28.108 | INFO     | core.rbac.service:ensure_default_entities_exist:266 - Назначение ядерных разрешений роли 'Moderator' (ID: 2)...
+2025-07-31 09:06:28.125 | INFO     | core.rbac.service:ensure_default_entities_exist:266 - Назначение ядерных разрешений роли 'User' (ID: 1)...
+2025-07-31 09:06:28.126 | DEBUG    | core.rbac.service:ensure_default_entities_exist:282 - Этап 5.1: Автоматическое назначение базовых прав модулей роли 'User'.
+2025-07-31 09:06:28.147 | WARNING  | core.rbac.service:ensure_default_entities_exist:336 - Не найдено зарегистрированное разрешение 'stats_monitor.access_user_features' для модуля 'stats_monitor'
+2025-07-31 09:06:28.147 | WARNING  | core.rbac.service:ensure_default_entities_exist:336 - Не найдено зарегистрированное разрешение 'stats_monitor.view_stats' для модуля 'stats_monitor'
+2025-07-31 09:06:28.148 | WARNING  | core.rbac.service:ensure_default_entities_exist:336 - Не найдено зарегистрированное разрешение 'stats_monitor.admin_manage' для модуля 'stats_monitor'
+2025-07-31 09:06:28.259 | INFO     | core.rbac.service:ensure_default_entities_exist:366 - Не было обнаружено фактических изменений в RBAC для коммита.
+2025-07-31 09:06:28.260 | INFO     | core.services_provider:setup_services:68 - RBACService.ensure_default_entities_exist отработал. Ролей создано: 0, Разрешений ядра: 0, Разрешений модулей: 0
+2025-07-31 09:06:28.262 | SUCCESS  | core.services_provider:setup_services:72 - Сервис RBACService успешно настроен.
+2025-07-31 09:06:28.263 | INFO     | core.users.service:__init__:24 - UserService инициализирован.
+2025-07-31 09:06:28.264 | SUCCESS  | core.services_provider:setup_services:83 - Сервис UserService успешно настроен.
+2025-07-31 09:06:28.270 | INFO     | core.cache.manager:__init__:242 - CacheManager инициализирован. Сконфигурированный тип кэша: memory
+2025-07-31 09:06:28.270 | INFO     | core.cache.manager:__init__:60 - MemoryCache инициализирован (использует cachetools: True, default TTL: 300s).
+2025-07-31 09:06:28.271 | DEBUG    | core.cache.manager:initialize:62 - MemoryCache.initialize() - операция не требуется.
+2025-07-31 09:06:28.271 | SUCCESS  | core.cache.manager:initialize:277 - Бэкенд кэша 'memory' успешно инициализирован.
+2025-07-31 09:06:28.272 | SUCCESS  | core.services_provider:setup_services:93 - Сервис CacheManager (memory) успешно настроен.
+2025-07-31 09:06:28.277 | INFO     | core.http_client.manager:__init__:37 - HTTPClientManager инициализирован (таймаут по умолчанию: 10 сек).
+2025-07-31 09:06:28.279 | SUCCESS  | core.http_client.manager:initialize:44 - aiohttp.ClientSession успешно создан и инициализирован.
+2025-07-31 09:06:28.280 | SUCCESS  | core.services_provider:setup_services:107 - Сервис HTTPClientManager успешно настроен.
+2025-07-31 09:06:28.282 | INFO     | core.events.dispatcher:__init__:26 - EventDispatcher инициализирован.
+2025-07-31 09:06:28.283 | SUCCESS  | core.services_provider:setup_services:119 - Сервис EventDispatcher успешно инициализирован.
+2025-07-31 09:06:28.284 | INFO     | core.ui.registry_ui:__init__:44 - UIRegistry инициализирован.
+2025-07-31 09:06:28.284 | SUCCESS  | core.services_provider:setup_services:127 - Сервис UIRegistry успешно инициализирован.
+2025-07-31 09:06:28.284 | INFO     | core.services_provider:setup_services:134 - ✅ Первичная настройка всех основных сервисов SDB завершена.
+2025-07-31 09:06:28.285 | SUCCESS  | core.bot_entrypoint:run_sdb_bot:164 - ✅ BotServicesProvider и все его базовые сервисы успешно инициализированы.
+2025-07-31 09:06:28.539 | INFO     | core.bot_entrypoint:run_sdb_bot:171 - 🤖 Экземпляр Telegram Bot успешно создан: @SDBTest_Bot (ID: 7271638908)
+2025-07-31 09:06:28.540 | INFO     | core.bot_entrypoint:run_sdb_bot:186 - FSM Storage: используется MemoryStorage.
+2025-07-31 09:06:28.542 | INFO     | core.bot_entrypoint:run_sdb_bot:189 - 🚦 Dispatcher и FSM Storage инициализированы.
+2025-07-31 09:06:28.543 | INFO     | core.i18n.translator:__init__:55 - Translator инициализирован. Locales dir: '/root/SDB/SwiftDevBot-Lite/locales', Domain: 'bot', Default: 'en', Available: ['en', 'ua', 'ru']
+2025-07-31 09:06:28.543 | INFO     | core.i18n.translator:load_all_translations:93 - Предзагрузка всех доступных переводов (['en', 'ua', 'ru'])...
+2025-07-31 09:06:28.544 | WARNING  | core.i18n.translator:load_translation:83 - Файл перевода .mo для языка 'en' (домен 'bot') не найден в '/root/SDB/SwiftDevBot-Lite/locales'.
+2025-07-31 09:06:28.545 | WARNING  | core.i18n.translator:load_translation:83 - Файл перевода .mo для языка 'ua' (домен 'bot') не найден в '/root/SDB/SwiftDevBot-Lite/locales'.
+2025-07-31 09:06:28.547 | WARNING  | core.i18n.translator:load_translation:83 - Файл перевода .mo для языка 'ru' (домен 'bot') не найден в '/root/SDB/SwiftDevBot-Lite/locales'.
+2025-07-31 09:06:28.548 | INFO     | core.bot_entrypoint:run_sdb_bot:198 - I18nMiddleware зарегистрирован для всех Update.
+2025-07-31 09:06:28.548 | INFO     | core.bot_entrypoint:run_sdb_bot:201 - UserStatusMiddleware зарегистрирован для всех Update.
+2025-07-31 09:06:28.548 | INFO     | core.bot_entrypoint:run_sdb_bot:204 - Базовый UI-роутер ядра 'sdb_core_ui_handlers' зарегистрирован.
+2025-07-31 09:06:28.549 | INFO     | core.bot_entrypoint:run_sdb_bot:208 - ✅ Главный админ-роутер 'sdb_admin_top_level_router' успешно зарегистрирован
+2025-07-31 09:06:28.549 | INFO     | core.module_loader:scan_all_available_modules:257 - Начало сканирования всех модулей...
+2025-07-31 09:06:28.557 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'stats_monitor' (v0.1.0) в 'stats_monitor'.
+2025-07-31 09:06:28.576 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'youtube_downloader' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/youtube_downloader.yaml
+2025-07-31 09:06:28.576 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'youtube_downloader' загружены и провалидированы.
+2025-07-31 09:06:28.577 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'youtube_downloader': {'max_downloads_per_day': 10, 'max_file_size_mb': 100, 'allow_playlists': False}
+2025-07-31 09:06:28.577 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'youtube_downloader' (v1.0.0) в 'youtube_downloader'.
+2025-07-31 09:06:28.582 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes' (v0.1.0) в 'notes'.
+2025-07-31 09:06:28.599 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'notes_manager' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/notes_manager.yaml
+2025-07-31 09:06:28.600 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'notes_manager' загружены и провалидированы.
+2025-07-31 09:06:28.601 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'notes_manager': {'max_notes_per_user': 100}
+2025-07-31 09:06:28.602 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes_manager' (v1.0.0) в 'notes_manager'.
+2025-07-31 09:06:28.610 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'task_manager' (v0.1.0) в 'task_manager'.
+2025-07-31 09:06:28.611 | INFO     | core.module_loader:scan_all_available_modules:260 - Сканирование всех модулей завершено. Всего найдено: 5
+2025-07-31 09:06:28.612 | WARNING  | core.module_loader:_load_enabled_plugin_names:282 - Файл со списком активных плагинов Config/enabled_modules.json не найден.
+2025-07-31 09:06:28.613 | INFO     | core.module_loader:initialize_and_setup_modules:345 - Настройка системных модулей ядра...
+2025-07-31 09:06:28.614 | INFO     | core.module_loader:initialize_and_setup_modules:352 - Настройка системных модулей ядра завершена.
+2025-07-31 09:06:28.614 | INFO     | core.module_loader:initialize_and_setup_modules:354 - Нет активных плагинов для настройки.
+2025-07-31 09:06:28.614 | DEBUG    | core.bot_entrypoint:_setup_bot_commands:67 - [CoreBotSetup] Начало установки команд бота в Telegram...
+2025-07-31 09:06:28.751 | SUCCESS  | core.bot_entrypoint:_setup_bot_commands:100 - [CoreBotSetup] Установлено 3 команд бота в Telegram: ['start', 'help', 'admin']
+2025-07-31 09:06:28.799 | INFO     | core.bot_entrypoint:run_sdb_bot:260 - 📡 Запуск Telegram Bot Polling для @SDBTest_Bot...
+2025-07-31 09:06:28.845 | INFO     | core.bot_entrypoint:on_bot_startup:222 - ⚡ Событие startup для Dispatcher (бот: @SDBTest_Bot)...
+2025-07-31 09:06:28.846 | INFO     | core.admin_auto_setup:initialize:109 - 🔧 Проверка супер администратора...
+2025-07-31 09:06:28.847 | WARNING  | core.admin_auto_setup:ensure_super_admin_exists:45 - Супер администратор не настроен! Укажите SUPER_ADMIN_TELEGRAM_ID в .env или admin.super_admin_telegram_id в config.yaml
+2025-07-31 09:06:28.847 | ERROR    | core.admin_auto_setup:initialize:126 - ❌ Не удалось настроить супер администратора
+2025-07-31 09:06:28.848 | INFO     | core.ui.callback_data_manager:cleanup_expired_hashes_task:127 - [CallbackManager] Фоновая задача очистки хешей запущена.
+2025-07-31 09:06:28.892 | INFO     | core.bot_entrypoint:on_bot_startup:232 - Webhook удален, ожидающие обновления сброшены.
+2025-07-31 09:06:28.893 | SUCCESS  | core.bot_entrypoint:on_bot_startup:234 - ✅ Бот SDB @SDBTest_Bot успешно запущен и готов к работе!
+2025-07-31 09:07:21.205 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:07:21.223 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:07:21.223 | INFO     | core.users.service:_update_existing_user_data:117 - Данные пользователя TG ID: 7847397229 (DB ID: 1) будут обновлены: {'preferred_language_code': ('en', 'ru')}
+2025-07-31 09:07:21.224 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: True).
+2025-07-31 09:07:21.236 | DEBUG    | core.rbac.service:assign_role_to_user:400 - [ASSIGN_ROLE_TO_USER] Проверка связи для UserID: 1 (тип: <class 'int'>), RoleID: 1 (тип: <class 'int'>)
+2025-07-31 09:07:21.241 | DEBUG    | core.rbac.service:assign_role_to_user:405 - [ASSIGN_ROLE_TO_USER] Результат scalar_one_or_none для UserID 1, RoleID 1: None (тип: <class 'NoneType'>)
+2025-07-31 09:07:21.241 | INFO     | core.rbac.service:assign_role_to_user:413 - Роль 'User' (RoleID: 1) добавлена пользователю UserID: 1 (ожидает commit).
+2025-07-31 09:07:21.242 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: True, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([<UserRole(id=None, user_id=1, role_id=1)>])
+2025-07-31 09:07:21.259 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:07:21.284 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:07:21.287 | DEBUG    | core.users.middleware:__call__:136 - [UserStatusMiddleware] Для /start пользователя @SoverX_Admin_Groups установлен флаг user_was_just_created = False
+2025-07-31 09:07:21.288 | INFO     | core.ui.handlers_core_ui:handle_start_command:89 - [CoreUI] Пользователь 7847397229 (@SoverX_Admin_Groups) вызвал /start. SDB_User DB ID: 1. Был только что создан (в middleware): False.
+2025-07-31 09:07:21.289 | INFO     | core.ui.handlers_core_ui:handle_start_command:97 - [CoreUI] Пользователь 7847397229 (существующий). Показ главного reply-меню.
+2025-07-31 09:07:21.289 | DEBUG    | core.ui.handlers_core_ui:show_main_menu_reply:53 - [CoreUI] User 7847397229 (SoverX Admin Groups [^_]) showing main reply menu.
+2025-07-31 09:07:24.740 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:07:24.755 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:07:24.755 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:07:24.756 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:07:24.768 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:07:24.782 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:07:24.785 | INFO     | core.ui.handlers_core_ui:handle_text_modules_list:157 - Пользователь 7847397229 нажал reply-кнопку 'Модули'
+2025-07-31 09:07:35.969 | INFO     | core.bot_entrypoint:on_bot_shutdown:246 - ⏳ Событие shutdown для Dispatcher. Начало остановки бота @SDBTest_Bot...
+2025-07-31 09:07:35.970 | INFO     | core.logging_manager:shutdown_logging:191 - Начало процедуры остановки LoggingManager...
+2025-07-31 09:07:35.970 | INFO     | core.logging_manager:shutdown_logging:195 - Планировщик задач LoggingManager остановлен.
+2025-07-31 09:12:48.846 | SUCCESS  | core.logging_manager:_setup_loguru_file_sink:81 - Файловый логгер настроен. Уровень: DEBUG. Файл: /root/SDB/SwiftDevBot-Lite/project_data/Logs/2025/07-July/31/09_sdb.log
+2025-07-31 09:12:48.851 | INFO     | core.logging_manager:initialize_logging:175 - Задача _hourly_log_rotation_check добавлена в планировщик (ежечасно).
+2025-07-31 09:12:48.852 | INFO     | core.logging_manager:initialize_logging:177 - Задача _cleanup_old_logs добавлена в планировщик (ежедневно в 03:30 UTC).
+2025-07-31 09:12:48.854 | SUCCESS  | core.logging_manager:initialize_logging:181 - Планировщик задач LoggingManager успешно запущен.
+2025-07-31 09:12:48.855 | INFO     | core.logging_manager:initialize_logging:187 - LoggingManager успешно инициализирован.
+2025-07-31 09:12:48.855 | INFO     | core.bot_entrypoint:run_sdb_bot:120 - Система логирования инициализирована. Уровень консольного лога: INFO (может быть переопределен SDB_CLI_DEBUG_MODE_FOR_LOGGING). Уровень файлового лога всегда DEBUG (или TRACE, если так задано в LoggingManager).
+2025-07-31 09:12:48.855 | INFO     | core.bot_entrypoint:run_sdb_bot:124 - 🚀 Запуск SwiftDevBot (SDB) v0.1.0 в 2025-07-31 09:12:48 UTC...
+2025-07-31 09:12:48.856 | INFO     | core.bot_entrypoint:run_sdb_bot:125 - 🐍 Используется Python v3.12.3
+2025-07-31 09:12:48.856 | INFO     | core.bot_entrypoint:run_sdb_bot:126 - 🤖 Используется Aiogram v3.21.0
+2025-07-31 09:12:48.857 | DEBUG    | core.bot_entrypoint:run_sdb_bot:127 - Каталог запуска (CWD): /root/SDB/SwiftDevBot-Lite
+2025-07-31 09:12:48.857 | DEBUG    | core.bot_entrypoint:run_sdb_bot:128 - Корень проекта: /root/SDB/SwiftDevBot-Lite
+2025-07-31 09:12:48.857 | DEBUG    | core.bot_entrypoint:run_sdb_bot:129 - Директория данных проекта: /root/SDB/SwiftDevBot-Lite/project_data
+2025-07-31 09:12:48.858 | INFO     | core.services_provider:__init__:33 - BotServicesProvider создан (версия SDB: 0.1.0). Ожидает настройки сервисов.
+2025-07-31 09:12:48.858 | INFO     | core.services_provider:setup_services:36 - Начало асинхронной настройки основных сервисов SDB...
+2025-07-31 09:12:48.862 | INFO     | core.database.manager:__init__:31 - DBManager инициализирован для типа БД: sqlite
+2025-07-31 09:12:48.863 | DEBUG    | core.database.manager:_build_db_url:56 - Окончательный абсолютный путь для SQLite: /root/SDB/SwiftDevBot-Lite/project_data/Database_files/sdb.db
+2025-07-31 09:12:48.864 | INFO     | core.database.manager:initialize:87 - Инициализация асинхронного движка SQLAlchemy для URL: 'sqlite+aiosqlite://...' (детали URL скрыты)
+2025-07-31 09:12:48.883 | SUCCESS  | core.database.manager:initialize:105 - SQLAlchemy AsyncEngine и SessionFactory успешно созданы.
+2025-07-31 09:12:48.883 | SUCCESS  | core.services_provider:setup_services:42 - Сервис DBManager успешно настроен.
+2025-07-31 09:12:48.885 | INFO     | core.module_loader:__init__:71 - ModuleLoader инициализирован. Плагины: /root/SDB/SwiftDevBot-Lite/modules, Системные модули: /root/SDB/SwiftDevBot-Lite/core/sys_modules, Пользовательские настройки модулей: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings
+2025-07-31 09:12:48.886 | INFO     | core.module_loader:scan_all_available_modules:257 - Начало сканирования всех модулей...
+2025-07-31 09:12:48.894 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'stats_monitor' (v0.1.0) в 'stats_monitor'.
+2025-07-31 09:12:48.913 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'youtube_downloader' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/youtube_downloader.yaml
+2025-07-31 09:12:48.914 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'youtube_downloader' загружены и провалидированы.
+2025-07-31 09:12:48.915 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'youtube_downloader': {'max_downloads_per_day': 10, 'max_file_size_mb': 100, 'allow_playlists': False}
+2025-07-31 09:12:48.915 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'youtube_downloader' (v1.0.0) в 'youtube_downloader'.
+2025-07-31 09:12:48.919 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes' (v0.1.0) в 'notes'.
+2025-07-31 09:12:48.936 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'notes_manager' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/notes_manager.yaml
+2025-07-31 09:12:48.937 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'notes_manager' загружены и провалидированы.
+2025-07-31 09:12:48.938 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'notes_manager': {'max_notes_per_user': 100}
+2025-07-31 09:12:48.938 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes_manager' (v1.0.0) в 'notes_manager'.
+2025-07-31 09:12:48.945 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'task_manager' (v0.1.0) в 'task_manager'.
+2025-07-31 09:12:48.946 | INFO     | core.module_loader:scan_all_available_modules:260 - Сканирование всех модулей завершено. Всего найдено: 5
+2025-07-31 09:12:48.947 | WARNING  | core.module_loader:_load_enabled_plugin_names:282 - Файл со списком активных плагинов Config/enabled_modules.json не найден.
+2025-07-31 09:12:48.947 | SUCCESS  | core.services_provider:setup_services:53 - Сервис ModuleLoader инициализирован (найдено 5 модулей, активно плагинов 0).
+2025-07-31 09:12:48.948 | INFO     | core.rbac.service:__init__:127 - RBACService инициализирован.
+2025-07-31 09:12:48.948 | INFO     | core.rbac.service:ensure_default_entities_exist:194 - Проверка и создание стандартных сущностей RBAC (роли, разрешения ядра, разрешения модулей)...
+2025-07-31 09:12:48.948 | DEBUG    | core.rbac.service:ensure_default_entities_exist:201 - Этап 1: Создание/получение стандартных разрешений ЯДРА.
+2025-07-31 09:12:49.182 | DEBUG    | core.rbac.service:ensure_default_entities_exist:215 - Этап 2: Регистрация разрешений из МАНИФЕСТОВ МОДУЛЕЙ.
+2025-07-31 09:12:49.182 | INFO     | core.module_loader:get_all_declared_permissions_from_active_modules:438 - Не найдено разрешений, объявленных в активных/системных модулях.
+2025-07-31 09:12:49.183 | INFO     | core.rbac.service:register_permissions_from_modules:166 - Не найдено разрешений, объявленных в активных модулях, для регистрации.
+2025-07-31 09:12:49.184 | DEBUG    | core.rbac.service:ensure_default_entities_exist:222 - Этап 3: Создание/получение стандартных РОЛЕЙ.
+2025-07-31 09:12:49.235 | DEBUG    | core.rbac.service:ensure_default_entities_exist:246 - Этап 5: Назначение разрешений ЯДРА стандартным ролям.
+2025-07-31 09:12:49.249 | DEBUG    | core.rbac.service:get_all_permissions:664 - Запрошен список всех разрешений. Найдено: 38.
+2025-07-31 09:12:49.263 | INFO     | core.rbac.service:ensure_default_entities_exist:266 - Назначение ядерных разрешений роли 'Admin' (ID: 3)...
+2025-07-31 09:12:49.307 | INFO     | core.rbac.service:ensure_default_entities_exist:266 - Назначение ядерных разрешений роли 'Moderator' (ID: 2)...
+2025-07-31 09:12:49.327 | INFO     | core.rbac.service:ensure_default_entities_exist:266 - Назначение ядерных разрешений роли 'User' (ID: 1)...
+2025-07-31 09:12:49.328 | DEBUG    | core.rbac.service:ensure_default_entities_exist:282 - Этап 5.1: Автоматическое назначение базовых прав модулей роли 'User'.
+2025-07-31 09:12:49.350 | WARNING  | core.rbac.service:ensure_default_entities_exist:336 - Не найдено зарегистрированное разрешение 'stats_monitor.access_user_features' для модуля 'stats_monitor'
+2025-07-31 09:12:49.350 | WARNING  | core.rbac.service:ensure_default_entities_exist:336 - Не найдено зарегистрированное разрешение 'stats_monitor.view_stats' для модуля 'stats_monitor'
+2025-07-31 09:12:49.351 | WARNING  | core.rbac.service:ensure_default_entities_exist:336 - Не найдено зарегистрированное разрешение 'stats_monitor.admin_manage' для модуля 'stats_monitor'
+2025-07-31 09:12:49.467 | INFO     | core.rbac.service:ensure_default_entities_exist:366 - Не было обнаружено фактических изменений в RBAC для коммита.
+2025-07-31 09:12:49.467 | INFO     | core.services_provider:setup_services:68 - RBACService.ensure_default_entities_exist отработал. Ролей создано: 0, Разрешений ядра: 0, Разрешений модулей: 0
+2025-07-31 09:12:49.470 | SUCCESS  | core.services_provider:setup_services:72 - Сервис RBACService успешно настроен.
+2025-07-31 09:12:49.470 | INFO     | core.users.service:__init__:24 - UserService инициализирован.
+2025-07-31 09:12:49.471 | SUCCESS  | core.services_provider:setup_services:83 - Сервис UserService успешно настроен.
+2025-07-31 09:12:49.476 | INFO     | core.cache.manager:__init__:242 - CacheManager инициализирован. Сконфигурированный тип кэша: memory
+2025-07-31 09:12:49.477 | INFO     | core.cache.manager:__init__:60 - MemoryCache инициализирован (использует cachetools: True, default TTL: 300s).
+2025-07-31 09:12:49.477 | DEBUG    | core.cache.manager:initialize:62 - MemoryCache.initialize() - операция не требуется.
+2025-07-31 09:12:49.477 | SUCCESS  | core.cache.manager:initialize:277 - Бэкенд кэша 'memory' успешно инициализирован.
+2025-07-31 09:12:49.478 | SUCCESS  | core.services_provider:setup_services:93 - Сервис CacheManager (memory) успешно настроен.
+2025-07-31 09:12:49.481 | INFO     | core.http_client.manager:__init__:37 - HTTPClientManager инициализирован (таймаут по умолчанию: 10 сек).
+2025-07-31 09:12:49.482 | SUCCESS  | core.http_client.manager:initialize:44 - aiohttp.ClientSession успешно создан и инициализирован.
+2025-07-31 09:12:49.483 | SUCCESS  | core.services_provider:setup_services:107 - Сервис HTTPClientManager успешно настроен.
+2025-07-31 09:12:49.486 | INFO     | core.events.dispatcher:__init__:26 - EventDispatcher инициализирован.
+2025-07-31 09:12:49.487 | SUCCESS  | core.services_provider:setup_services:119 - Сервис EventDispatcher успешно инициализирован.
+2025-07-31 09:12:49.488 | INFO     | core.ui.registry_ui:__init__:44 - UIRegistry инициализирован.
+2025-07-31 09:12:49.488 | SUCCESS  | core.services_provider:setup_services:127 - Сервис UIRegistry успешно инициализирован.
+2025-07-31 09:12:49.489 | INFO     | core.services_provider:setup_services:134 - ✅ Первичная настройка всех основных сервисов SDB завершена.
+2025-07-31 09:12:49.489 | SUCCESS  | core.bot_entrypoint:run_sdb_bot:164 - ✅ BotServicesProvider и все его базовые сервисы успешно инициализированы.
+2025-07-31 09:12:49.748 | INFO     | core.bot_entrypoint:run_sdb_bot:171 - 🤖 Экземпляр Telegram Bot успешно создан: @SDBTest_Bot (ID: 7271638908)
+2025-07-31 09:12:49.749 | INFO     | core.bot_entrypoint:run_sdb_bot:186 - FSM Storage: используется MemoryStorage.
+2025-07-31 09:12:49.751 | INFO     | core.bot_entrypoint:run_sdb_bot:189 - 🚦 Dispatcher и FSM Storage инициализированы.
+2025-07-31 09:12:49.752 | INFO     | core.i18n.translator:__init__:55 - Translator инициализирован. Locales dir: '/root/SDB/SwiftDevBot-Lite/locales', Domain: 'bot', Default: 'en', Available: ['en', 'ua', 'ru']
+2025-07-31 09:12:49.752 | INFO     | core.i18n.translator:load_all_translations:93 - Предзагрузка всех доступных переводов (['en', 'ua', 'ru'])...
+2025-07-31 09:12:49.754 | WARNING  | core.i18n.translator:load_translation:83 - Файл перевода .mo для языка 'en' (домен 'bot') не найден в '/root/SDB/SwiftDevBot-Lite/locales'.
+2025-07-31 09:12:49.754 | WARNING  | core.i18n.translator:load_translation:83 - Файл перевода .mo для языка 'ua' (домен 'bot') не найден в '/root/SDB/SwiftDevBot-Lite/locales'.
+2025-07-31 09:12:49.756 | WARNING  | core.i18n.translator:load_translation:83 - Файл перевода .mo для языка 'ru' (домен 'bot') не найден в '/root/SDB/SwiftDevBot-Lite/locales'.
+2025-07-31 09:12:49.756 | INFO     | core.bot_entrypoint:run_sdb_bot:198 - I18nMiddleware зарегистрирован для всех Update.
+2025-07-31 09:12:49.757 | INFO     | core.bot_entrypoint:run_sdb_bot:201 - UserStatusMiddleware зарегистрирован для всех Update.
+2025-07-31 09:12:49.757 | INFO     | core.bot_entrypoint:run_sdb_bot:204 - Базовый UI-роутер ядра 'sdb_core_ui_handlers' зарегистрирован.
+2025-07-31 09:12:49.759 | INFO     | core.bot_entrypoint:run_sdb_bot:208 - ✅ Главный админ-роутер 'sdb_admin_top_level_router' успешно зарегистрирован
+2025-07-31 09:12:49.759 | INFO     | core.module_loader:scan_all_available_modules:257 - Начало сканирования всех модулей...
+2025-07-31 09:12:49.768 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'stats_monitor' (v0.1.0) в 'stats_monitor'.
+2025-07-31 09:12:49.787 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'youtube_downloader' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/youtube_downloader.yaml
+2025-07-31 09:12:49.787 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'youtube_downloader' загружены и провалидированы.
+2025-07-31 09:12:49.788 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'youtube_downloader': {'max_downloads_per_day': 10, 'max_file_size_mb': 100, 'allow_playlists': False}
+2025-07-31 09:12:49.788 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'youtube_downloader' (v1.0.0) в 'youtube_downloader'.
+2025-07-31 09:12:49.793 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes' (v0.1.0) в 'notes'.
+2025-07-31 09:12:49.811 | INFO     | core.module_loader:_load_and_validate_module_settings:190 - Загружены пользовательские настройки для модуля 'notes_manager' из: /root/SDB/SwiftDevBot-Lite/project_data/Config/modules_settings/notes_manager.yaml
+2025-07-31 09:12:49.811 | INFO     | core.module_loader:_load_and_validate_module_settings:250 - Актуальные настройки для модуля 'notes_manager' загружены и провалидированы.
+2025-07-31 09:12:49.812 | DEBUG    | core.module_loader:_load_and_validate_module_settings:251 - Итоговые настройки модуля 'notes_manager': {'max_notes_per_user': 100}
+2025-07-31 09:12:49.812 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'notes_manager' (v1.0.0) в 'notes_manager'.
+2025-07-31 09:12:49.817 | INFO     | core.module_loader:_scan_directory_for_modules:145 - Найден плагин 'task_manager' (v0.1.0) в 'task_manager'.
+2025-07-31 09:12:49.819 | INFO     | core.module_loader:scan_all_available_modules:260 - Сканирование всех модулей завершено. Всего найдено: 5
+2025-07-31 09:12:49.819 | WARNING  | core.module_loader:_load_enabled_plugin_names:282 - Файл со списком активных плагинов Config/enabled_modules.json не найден.
+2025-07-31 09:12:49.820 | INFO     | core.module_loader:initialize_and_setup_modules:345 - Настройка системных модулей ядра...
+2025-07-31 09:12:49.821 | INFO     | core.module_loader:initialize_and_setup_modules:352 - Настройка системных модулей ядра завершена.
+2025-07-31 09:12:49.822 | INFO     | core.module_loader:initialize_and_setup_modules:354 - Нет активных плагинов для настройки.
+2025-07-31 09:12:49.822 | DEBUG    | core.bot_entrypoint:_setup_bot_commands:67 - [CoreBotSetup] Начало установки команд бота в Telegram...
+2025-07-31 09:12:49.922 | SUCCESS  | core.bot_entrypoint:_setup_bot_commands:100 - [CoreBotSetup] Установлено 3 команд бота в Telegram: ['start', 'help', 'admin']
+2025-07-31 09:12:49.975 | INFO     | core.bot_entrypoint:run_sdb_bot:260 - 📡 Запуск Telegram Bot Polling для @SDBTest_Bot...
+2025-07-31 09:12:50.022 | INFO     | core.bot_entrypoint:on_bot_startup:222 - ⚡ Событие startup для Dispatcher (бот: @SDBTest_Bot)...
+2025-07-31 09:12:50.023 | INFO     | core.admin_auto_setup:initialize:109 - 🔧 Проверка супер администратора...
+2025-07-31 09:12:50.047 | INFO     | core.admin_auto_setup:ensure_super_admin_exists:56 - Супер администратор уже существует: TG ID 7847397229, DB ID 1
+2025-07-31 09:12:50.069 | DEBUG    | core.rbac.service:assign_role_to_user:400 - [ASSIGN_ROLE_TO_USER] Проверка связи для UserID: 1 (тип: <class 'int'>), RoleID: 3 (тип: <class 'int'>)
+2025-07-31 09:12:50.073 | DEBUG    | core.rbac.service:assign_role_to_user:405 - [ASSIGN_ROLE_TO_USER] Результат scalar_one_or_none для UserID 1, RoleID 3: None (тип: <class 'NoneType'>)
+2025-07-31 09:12:50.073 | INFO     | core.rbac.service:assign_role_to_user:413 - Роль 'Admin' (RoleID: 3) добавлена пользователю UserID: 1 (ожидает commit).
+2025-07-31 09:12:50.088 | INFO     | core.admin_auto_setup:ensure_super_admin_exists:71 - Роль администратора назначена пользователю TG ID 7847397229
+2025-07-31 09:12:50.089 | INFO     | core.admin_auto_setup:initialize:124 - ✅ Супер администратор готов к работе
+2025-07-31 09:12:50.091 | INFO     | core.ui.callback_data_manager:cleanup_expired_hashes_task:127 - [CallbackManager] Фоновая задача очистки хешей запущена.
+2025-07-31 09:12:50.138 | INFO     | core.bot_entrypoint:on_bot_startup:232 - Webhook удален, ожидающие обновления сброшены.
+2025-07-31 09:12:50.139 | SUCCESS  | core.bot_entrypoint:on_bot_startup:234 - ✅ Бот SDB @SDBTest_Bot успешно запущен и готов к работе!
+2025-07-31 09:12:59.802 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:12:59.828 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:12:59.829 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:12:59.830 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:12:59.845 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:12:59.867 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:12:59.869 | INFO     | core.ui.handlers_core_ui:handle_text_modules_list:157 - Пользователь 7847397229 нажал reply-кнопку 'Модули'
+2025-07-31 09:13:02.410 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:13:02.428 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:13:02.428 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:13:02.429 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:13:02.439 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:13:02.456 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:13:02.460 | INFO     | core.ui.handlers_core_ui:handle_text_profile:162 - Пользователь 7847397229 нажал reply-кнопку 'Профиль'
+2025-07-31 09:13:20.643 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:13:20.658 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:13:20.659 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:13:20.660 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:13:20.672 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:13:20.688 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:13:20.690 | DEBUG    | core.users.middleware:__call__:136 - [UserStatusMiddleware] Для /start пользователя @SoverX_Admin_Groups установлен флаг user_was_just_created = False
+2025-07-31 09:13:20.691 | INFO     | core.ui.handlers_core_ui:handle_start_command:89 - [CoreUI] Пользователь 7847397229 (@SoverX_Admin_Groups) вызвал /start. SDB_User DB ID: 1. Был только что создан (в middleware): False.
+2025-07-31 09:13:20.692 | INFO     | core.ui.handlers_core_ui:handle_start_command:97 - [CoreUI] Пользователь 7847397229 (существующий). Показ главного reply-меню.
+2025-07-31 09:13:20.692 | DEBUG    | core.ui.handlers_core_ui:show_main_menu_reply:53 - [CoreUI] User 7847397229 (SoverX Admin Groups [^_]) showing main reply menu.
+2025-07-31 09:13:22.372 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:13:22.387 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:13:22.388 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:13:22.389 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:13:22.400 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:13:22.415 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:13:22.419 | INFO     | core.ui.handlers_core_ui:handle_text_admin_panel:239 - Пользователь 7847397229 нажал reply-кнопку 'Админ-панель'
+2025-07-31 09:13:23.591 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:13:23.606 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:13:23.606 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:13:23.607 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:13:23.620 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:13:23.635 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:13:23.638 | INFO     | core.admin.sys_info.handlers_sys_info:cq_admin_show_system_info_entry:66 - [AdminSysInfo] Пользователь 7847397229 запросил системную информацию.
+2025-07-31 09:13:24.873 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:13:24.903 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:13:24.904 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:13:24.905 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:13:24.925 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:13:24.939 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:13:24.941 | INFO     | core.admin.entry.handlers_entry:cq_admin_nav_to_main_admin_menu:80 - [AdminEntry] Пользователь 7847397229 вернулся в главное меню админ-панели.
+2025-07-31 09:13:26.195 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:13:26.211 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:13:26.212 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:13:26.213 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:13:26.224 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:13:26.240 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:13:26.243 | INFO     | core.admin.users.handlers_list:cq_admin_users_list_entry:32 - [AdminUserList] Администратор 7847397229 запросил список пользователей, страница: 1
+2025-07-31 09:13:27.501 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:13:27.517 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:13:27.517 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:13:27.518 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:13:27.528 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:13:27.543 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:13:27.545 | INFO     | core.admin.entry.handlers_entry:cq_admin_nav_to_main_admin_menu:80 - [AdminEntry] Пользователь 7847397229 вернулся в главное меню админ-панели.
+2025-07-31 09:13:28.927 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:13:28.942 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:13:28.943 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:13:28.943 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:13:28.954 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:13:28.969 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:13:28.972 | INFO     | core.admin.roles.handlers_list:cq_admin_roles_list_entry:32 - [AdminRoleMgmtList] Администратор 7847397229 запросил список ролей.
+2025-07-31 09:13:29.001 | DEBUG    | core.rbac.service:get_all_roles:475 - Запрошен список всех ролей. Найдено: 3.
+2025-07-31 09:13:29.001 | DEBUG    | core.admin.roles.keyboards_roles:get_admin_roles_list_keyboard_local:46 - [AdminRolesKeyboards] Генерация списка ролей. Всего ролей: 3
+2025-07-31 09:13:29.001 | DEBUG    | core.admin.roles.keyboards_roles:get_admin_roles_list_keyboard_local:61 - [AdminRolesKeyboards] Добавлена кнопка для роли 'Admin' (ID: 3), callback: {"action":"view","item_id":3,"prefix":"sdb_admin_roles"}
+2025-07-31 09:13:29.002 | DEBUG    | core.admin.roles.keyboards_roles:get_admin_roles_list_keyboard_local:61 - [AdminRolesKeyboards] Добавлена кнопка для роли 'Moderator' (ID: 2), callback: {"action":"view","item_id":2,"prefix":"sdb_admin_roles"}
+2025-07-31 09:13:29.002 | DEBUG    | core.admin.roles.keyboards_roles:get_admin_roles_list_keyboard_local:61 - [AdminRolesKeyboards] Добавлена кнопка для роли 'User' (ID: 1), callback: {"action":"view","item_id":1,"prefix":"sdb_admin_roles"}
+2025-07-31 09:13:29.015 | DEBUG    | core.admin.roles.keyboards_roles:get_admin_roles_list_keyboard_local:80 - [AdminRolesKeyboards] Добавлена кнопка 'создать роль', callback: {"action":"create_start","prefix":"sdb_admin_roles"}
+2025-07-31 09:13:29.096 | DEBUG    | core.admin.roles.handlers_list:cq_admin_roles_list_entry:61 - [AdminRoleMgmtList] Сообщение со списком ролей отредактировано.
+2025-07-31 09:13:30.551 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:13:30.568 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:13:30.568 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:13:30.569 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:13:30.581 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:13:30.600 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:13:30.603 | INFO     | core.admin.entry.handlers_entry:cq_admin_nav_to_main_admin_menu:80 - [AdminEntry] Пользователь 7847397229 вернулся в главное меню админ-панели.
+2025-07-31 09:13:32.002 | INFO     | core.users.service:process_user_on_start:127 - UserService.process_user_on_start для TG ID: 7847397229 (@SoverX_Admin_Groups)
+2025-07-31 09:13:32.016 | INFO     | core.users.service:process_user_on_start:162 - Пользователь TG ID: 7847397229 (DB ID: 1) найден. Обновление данных...
+2025-07-31 09:13:32.017 | INFO     | core.users.service:process_user_on_start:167 - Данные пользователя TG ID: 7847397229 отслеживаются сессией (изменения: False).
+2025-07-31 09:13:32.017 | INFO     | core.users.service:process_user_on_start:190 - UserService: ПЕРЕД session.commit() для TG ID 7847397229. Data changed: False, Dirty: IdentitySet([<User(id=1, tg_id=7847397229, name='SoverX Admin Groups [^_]')>]), New: IdentitySet([])
+2025-07-31 09:13:32.029 | SUCCESS  | core.users.service:process_user_on_start:193 - UserService: ПОСЛЕ session.commit() для TG ID 7847397229.
+2025-07-31 09:13:32.044 | DEBUG    | core.users.service:process_user_on_start:196 - Пользователь 1 обновлен из БД после коммита в UserService.
+2025-07-31 09:13:36.986 | INFO     | core.bot_entrypoint:on_bot_shutdown:246 - ⏳ Событие shutdown для Dispatcher. Начало остановки бота @SDBTest_Bot...
+2025-07-31 09:13:36.986 | INFO     | core.logging_manager:shutdown_logging:191 - Начало процедуры остановки LoggingManager...
+2025-07-31 09:13:36.987 | INFO     | core.logging_manager:shutdown_logging:195 - Планировщик задач LoggingManager остановлен.

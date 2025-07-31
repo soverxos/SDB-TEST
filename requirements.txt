@@ -1,0 +1,51 @@
+# requirements.txt
+# Core Aiogram and Bot functionality
+aiogram # Рекомендую последнюю стабильную версию 3.x, например, 3.7.0 или новее
+python-dotenv
+
+# Configuration
+pydantic # Используем Pydantic v2
+pydantic-settings
+pydantic-extra-types # Для DSN и других доп. типов
+PyYAML
+
+# Database (SQLAlchemy & Alembic)
+SQLAlchemy[asyncio] # [asyncio] для поддержки асинхронных драйверов
+alembic
+
+# Async Database Drivers (выбери или оставь все, если планируешь тестировать все)
+aiosqlite                 # Для SQLite
+psycopg[binary]    # Для PostgreSQL (бинарная версия, чтобы избежать проблем с компиляцией)
+# asyncpg>=0.27.0           # Альтернативный драйвер для PostgreSQL, если предпочтешь его psycopg
+aiomysql           # Для MySQL
+
+# Logging
+loguru
+parsedatetime
+apscheduler
+
+# CLI
+typer[all] # [all] включает rich и другие полезности
+
+# HTTP Client
+aiohttp
+
+# Version comparison (используется в ModuleLoader)
+packaging
+
+# Cache (опционально, но рекомендуется для MemoryCache с TTLCache)
+cachetools
+rich # Для красивого отображения в CLI
+
+# System Information (для админ-панели)
+psutil
+
+# Redis (опционально, только если используется Redis кэш)
+# Чтобы использовать Redis кэш, раскомментируйте и установите:
+# redis>=4.5.0
+
+# Testing dependencies
+pytest>=7.0.0
+pytest-asyncio>=0.21.0
+pytest-mock>=3.10.0
+yt-dlp>=2025.7.21  # YouTube downloader with latest anti-bot fixes

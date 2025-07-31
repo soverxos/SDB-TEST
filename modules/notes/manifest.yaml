@@ -1,0 +1,28 @@
+# modules/notes/manifest.yaml
+name: "notes"
+display_name: "Заметки (Простые)"
+version: "0.1.0"
+description: "Простой модуль для создания и управления заметками (в разработке)."
+author: "SwiftDevBot Team"
+
+python_requirements: []
+sdb_module_dependencies: []
+
+model_definitions: []
+
+commands: []
+
+permissions: 
+  - name: "notes.access_user_features"
+    description: "Доступ к основному пользовательскому интерфейсу модуля Заметки."
+
+settings: {}
+
+metadata:
+  min_sdb_core_version: "0.1.0"
+  tags: ["productivity", "notes", "simple", "development"]
+  development_status: "placeholder"  # Указываем, что модуль в разработке
+  # Старая схема (для обратной совместимости)
+  assign_default_access_to_user_role: false
+  # Новая расширенная схема автоназначения разрешений
+  auto_assign_permissions: []
