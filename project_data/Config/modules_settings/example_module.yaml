@@ -1,3 +1,0 @@
-example_setting_string: 111Дефолтное значение из файла example_module/module_settings.yaml
-example_setting_bool: false
-max_notes_per_user: 5

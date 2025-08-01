@@ -34,6 +34,7 @@ try:
     from cli.module import module_app
     from cli.user import user_app
     from cli.backup import backup_app
+    from cli.backup_smart import app as backup_smart_app
     from cli.system import system_app
     from cli.bot import bot_app
     
@@ -42,6 +43,7 @@ try:
     cli_main_app.add_typer(module_app, name="module", help="🧩 Управление модулями.")
     cli_main_app.add_typer(user_app, name="user", help="👤 Управление пользователями.")
     cli_main_app.add_typer(backup_app, name="backup", help="💾 Управление бэкапами.")
+    cli_main_app.add_typer(backup_smart_app, name="backup-smart", help="🔍 Умные бэкапы с хешами.")
     cli_main_app.add_typer(system_app, name="system", help="🛠️ Системные команды.")
     cli_main_app.add_typer(bot_app, name="bot", help="🤖 Взаимодействие с Bot API.")
 

@@ -160,3 +160,9 @@ $RECYCLE.BIN/
 .env
 .env.local
 .env.*.local
+
+# === Project Specific ===
+# Backup files and directories
+backup/
+project_snapshot.txt
+config.yaml
