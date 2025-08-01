@@ -1,0 +1,437 @@
+{
+  "summary": {
+    "total_tests": 61,
+    "successful_tests": 61,
+    "failed_tests": 0,
+    "success_rate": 100.0
+  },
+  "results": [
+    {
+      "test": "Справка Основная справка",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:44:29"
+    },
+    {
+      "test": "Справка Справка monitor",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:44:33"
+    },
+    {
+      "test": "Справка Справка utils",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:44:38"
+    },
+    {
+      "test": "Справка Справка monitor status",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:44:42"
+    },
+    {
+      "test": "Справка Справка utils diagnose",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:44:47"
+    },
+    {
+      "test": "Status Базовый статус",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:44:52"
+    },
+    {
+      "test": "Status Подробный статус",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:44:58"
+    },
+    {
+      "test": "Status Статус в JSON",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:05"
+    },
+    {
+      "test": "Status Проверка здоровья",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:11"
+    },
+    {
+      "test": "Metrics Базовые метрики",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:17"
+    },
+    {
+      "test": "Metrics CPU и память",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:23"
+    },
+    {
+      "test": "Metrics Диск и сеть",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:28"
+    },
+    {
+      "test": "Alerts Список алертов",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:32"
+    },
+    {
+      "test": "Alerts История алертов",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:36"
+    },
+    {
+      "test": "Logs Анализ логов",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:41"
+    },
+    {
+      "test": "Logs Ошибки в логах",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:45"
+    },
+    {
+      "test": "Logs Последние 10 записей",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:50"
+    },
+    {
+      "test": "Logs Поиск ошибок",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:54"
+    },
+    {
+      "test": "Performance Анализ производительности",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:45:59"
+    },
+    {
+      "test": "Performance Медленные запросы",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:03"
+    },
+    {
+      "test": "Performance Время ответа",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:08"
+    },
+    {
+      "test": "Performance Утечки памяти",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:12"
+    },
+    {
+      "test": "Report Ежедневный отчет",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:18"
+    },
+    {
+      "test": "Report Еженедельный HTML отчет",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:23"
+    },
+    {
+      "test": "Report Ежемесячный отчет",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:29"
+    },
+    {
+      "test": "Integrate Интеграция с Prometheus/Grafana",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:34"
+    },
+    {
+      "test": "Integrate Интеграция с DataDog",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:40"
+    },
+    {
+      "test": "Integrate Интеграция с New Relic",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:44"
+    },
+    {
+      "test": "Diagnose Полная диагностика",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:49"
+    },
+    {
+      "test": "Diagnose Диагностика системы",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:53"
+    },
+    {
+      "test": "Diagnose Диагностика сети",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:46:57"
+    },
+    {
+      "test": "Diagnose Диагностика БД",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:02"
+    },
+    {
+      "test": "Diagnose Диагностика безопасности",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:07"
+    },
+    {
+      "test": "Diagnose Подробная диагностика",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:11"
+    },
+    {
+      "test": "Check Проверка файлов",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:15"
+    },
+    {
+      "test": "Check Проверка БД",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:20"
+    },
+    {
+      "test": "Check Проверка конфигурации",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:24"
+    },
+    {
+      "test": "Check Проверка прав доступа",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:29"
+    },
+    {
+      "test": "Check Полная проверка",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:34"
+    },
+    {
+      "test": "Diagnose before cleanup",
+      "success": true,
+      "message": "Диагностика выполнена перед очисткой",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:39"
+    },
+    {
+      "test": "Cleanup Очистка временных файлов",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:46"
+    },
+    {
+      "test": "Cleanup Очистка кэша",
+      "success": true,
+      "message": "Команда выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:51"
+    },
+    {
+      "test": "Создание test.json",
+      "success": true,
+      "message": "Тестовый файл создан",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:51"
+    },
+    {
+      "test": "Создание test.csv",
+      "success": true,
+      "message": "Тестовый файл создан",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:51"
+    },
+    {
+      "test": "Создание test.yaml",
+      "success": true,
+      "message": "Тестовый файл создан",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:51"
+    },
+    {
+      "test": "Convert JSON в YAML",
+      "success": true,
+      "message": "Конвертация выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:47:55"
+    },
+    {
+      "test": "Convert CSV в JSON",
+      "success": true,
+      "message": "Конвертация выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:00"
+    },
+    {
+      "test": "Convert YAML в CSV",
+      "success": true,
+      "message": "Конвертация выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:04"
+    },
+    {
+      "test": "Удаление test.json",
+      "success": true,
+      "message": "Тестовый файл удален",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:04"
+    },
+    {
+      "test": "Удаление test.csv",
+      "success": true,
+      "message": "Тестовый файл удален",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:04"
+    },
+    {
+      "test": "Удаление test.yaml",
+      "success": true,
+      "message": "Тестовый файл удален",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:04"
+    },
+    {
+      "test": "Создание secret.txt",
+      "success": true,
+      "message": "Тестовый файл создан",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:04"
+    },
+    {
+      "test": "Encrypt Шифрование с паролем",
+      "success": true,
+      "message": "Шифрование выполнено успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:09"
+    },
+    {
+      "test": "Decrypt Расшифровка с паролем",
+      "success": true,
+      "message": "Расшифровка выполнена успешно",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:13"
+    },
+    {
+      "test": "Проверка шифрования",
+      "success": true,
+      "message": "Оригинал и расшифрованный файл идентичны",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:13"
+    },
+    {
+      "test": "Удаление secret.txt",
+      "success": true,
+      "message": "Тестовый файл удален",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:13"
+    },
+    {
+      "test": "Удаление secret.enc",
+      "success": true,
+      "message": "Тестовый файл удален",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:13"
+    },
+    {
+      "test": "Удаление decrypted.txt",
+      "success": true,
+      "message": "Тестовый файл удален",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:13"
+    },
+    {
+      "test": "Опасная команда Полная очистка (ОПАСНО)",
+      "success": true,
+      "message": "Команда выполнена (возможно с предупреждением)",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:18"
+    },
+    {
+      "test": "Опасная команда Очистка логов (ОСТОРОЖНО)",
+      "success": true,
+      "message": "Команда выполнена (возможно с предупреждением)",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:23"
+    },
+    {
+      "test": "Опасная команда Очистка бэкапов (ОСТОРОЖНО)",
+      "success": true,
+      "message": "Команда выполнена (возможно с предупреждением)",
+      "details": "",
+      "timestamp": "2025-08-01 11:48:27"
+    }
+  ]
+}

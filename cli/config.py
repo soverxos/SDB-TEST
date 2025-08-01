@@ -143,9 +143,17 @@ def get_command(key: Optional[str] = typer.Argument(None, help="Ключ (нап
                 value = getattr(value, part) if hasattr(value, part) else value[part] # type: ignore
             
             if hasattr(value, 'model_dump'): value = value.model_dump(mode='json')
-            yaml_output = yaml.dump({'value': value}, indent=2).split('value:')[1].strip()
-            sdb_console.print(f"Значение для [cyan]{key}[/]:")
-            sdb_console.print(Syntax(yaml_output, "yaml", theme="native"))
+            
+            # Красивое отображение значения
+            sdb_console.print(Panel(f"[bold cyan]Конфигурация: {key}[/]", expand=False))
+            
+            if isinstance(value, dict):
+                yaml_output = yaml.dump(value, indent=2, sort_keys=False)
+                sdb_console.print(Syntax(yaml_output, "yaml", theme="native"))
+            else:
+                sdb_console.print(f"   [green]Значение:[/green] {value}")
+                sdb_console.print(f"   [blue]Тип:[/blue] {type(value).__name__}")
+                
         except (AttributeError, KeyError):
             sdb_console.print(f"[bold red]Ошибка: Ключ '{key}' не найден.[/bold red]"); raise typer.Exit(1)
 

@@ -166,3 +166,9 @@ $RECYCLE.BIN/
 backup/
 project_snapshot.txt
 config.yaml
+
+# === Security Keys ===
+# Encryption keys (should not be committed)
+*.key
+secret.key
+quick_secret.key

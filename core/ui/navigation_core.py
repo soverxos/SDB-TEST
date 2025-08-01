@@ -5,8 +5,8 @@ from aiogram.exceptions import TelegramBadRequest
 from aiogram.utils.markdown import hbold, hitalic
 from loguru import logger
 
-from .callback_data_factories import CoreMenuNavigate, ModuleMenuEntry, CoreServiceAction
-from .keyboards_core import (
+from core.ui.callback_data_factories import CoreMenuNavigate, CoreServiceAction
+from core.ui.keyboards_core import (
     get_main_menu_keyboard, 
     get_modules_list_keyboard,
     # get_close_button_keyboard, # Если будет использоваться явно
@@ -17,7 +17,8 @@ from typing import TYPE_CHECKING
 if TYPE_CHECKING:
     from core.services_provider import BotServicesProvider
 
-core_navigation_router = Router(name="sdb_core_ui_navigation_handlers")
+core_navigation_router = Router(name="sdb_core_navigation_handlers")
+MODULE_NAME_FOR_LOG = "CoreNavigation"
 
 @core_navigation_router.callback_query(CoreMenuNavigate.filter(F.target_menu == "main"))
 async def cq_nav_to_main_menu(
@@ -25,12 +26,9 @@ async def cq_nav_to_main_menu(
     services_provider: 'BotServicesProvider' 
 ):
     user_id = query.from_user.id
-    user_full_name = query.from_user.full_name
-    logger.debug(f"User {user_id} ({user_full_name}) navigating to main menu.")
+    logger.debug(f"User {user_id} requested main menu.")
     
-    texts = TEXTS_CORE_KEYBOARDS_EN
-    text = f"🏠 {hbold('Главное меню SwiftDevBot')}\nПривет, {hbold(user_full_name)}! Выберите действие:"
-    
+    text = TEXTS_CORE_KEYBOARDS_EN["main_menu_title"]
     keyboard = await get_main_menu_keyboard(services_provider=services_provider, user_telegram_id=user_id)
     
     try:
@@ -38,19 +36,18 @@ async def cq_nav_to_main_menu(
             if query.message.text != text or query.message.reply_markup != keyboard:
                 await query.message.edit_text(text, reply_markup=keyboard)
             else:
-                logger.trace("Сообщение главного меню не было изменено (текст и клавиатура совпадают).")
+                logger.trace("Сообщение главного меню не было изменено.")
         await query.answer()
     except TelegramBadRequest as e:
         if "message is not modified" in str(e).lower():
             logger.trace("Сообщение главного меню не было изменено (поймано исключение).")
             await query.answer()
         else:
-            logger.warning(f"Не удалось отредактировать сообщение для главного меню (user: {user_id}): {e}")
+            logger.warning(f"Не удалось отредактировать сообщение главного меню (user: {user_id}): {e}")
             await query.answer("Ошибка отображения меню.", show_alert=True)
     except Exception as e:
         logger.error(f"Непредвиденная ошибка при показе главного меню (user: {user_id}): {e}", exc_info=True)
         await query.answer("Произошла серьезная ошибка.", show_alert=True)
-
 
 @core_navigation_router.callback_query(CoreMenuNavigate.filter(F.target_menu == "modules_list"))
 async def cq_nav_to_modules_list(
@@ -95,43 +92,6 @@ async def cq_nav_to_modules_list(
     except Exception as e:
         logger.error(f"Непредвиденная ошибка при показе списка модулей (user: {user_id}): {e}", exc_info=True)
         await query.answer("Произошла серьезная ошибка.", show_alert=True)
-
-@core_navigation_router.callback_query(CoreMenuNavigate.filter(F.target_menu == "profile"))
-async def cq_nav_to_profile(
-    query: types.CallbackQuery, 
-    services_provider: 'BotServicesProvider' 
-):
-    user_id = query.from_user.id
-    logger.debug(f"User {user_id} requested profile menu (WIP).")
-    text = "👤 Раздел 'Профиль' находится в разработке."
-    keyboard = await get_main_menu_keyboard(services_provider=services_provider, user_telegram_id=user_id) 
-    if query.message:
-        
-        try:
-            if query.message.text != text or query.message.reply_markup != keyboard:
-                await query.message.edit_text(text, reply_markup=keyboard)
-        except TelegramBadRequest as e:
-            if "message is not modified" not in str(e).lower():
-                logger.warning(f"Ошибка edit_text в cq_nav_to_profile: {e}")
-    await query.answer("Раздел в разработке.")
-
-@core_navigation_router.callback_query(CoreMenuNavigate.filter(F.target_menu == "feedback"))
-async def cq_nav_to_feedback(
-    query: types.CallbackQuery, 
-    services_provider: 'BotServicesProvider' 
-):
-    user_id = query.from_user.id
-    logger.debug(f"User {user_id} requested feedback menu (WIP).")
-    text = "✍️ Раздел 'Обратная связь' находится в разработке."
-    keyboard = await get_main_menu_keyboard(services_provider=services_provider, user_telegram_id=user_id) 
-    if query.message:
-        try:
-            if query.message.text != text or query.message.reply_markup != keyboard:
-                await query.message.edit_text(text, reply_markup=keyboard)
-        except TelegramBadRequest as e:
-            if "message is not modified" not in str(e).lower():
-                logger.warning(f"Ошибка edit_text в cq_nav_to_feedback: {e}")
-    await query.answer("Раздел в разработке.")
 
 # Удален обработчик cq_nav_to_admin_panel, так как он конфликтовал
 # с рабочим обработчиком в core/admin/handlers_admin_entry.py

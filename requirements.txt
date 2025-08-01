@@ -30,6 +30,7 @@ typer[all] # [all] включает rich и другие полезности
 
 # HTTP Client
 aiohttp
+requests # Для синхронных HTTP запросов (уведомления, API)
 
 # Version comparison (используется в ModuleLoader)
 packaging

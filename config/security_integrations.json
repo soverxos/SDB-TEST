@@ -1,0 +1,32 @@
+{
+  "virustotal": {
+    "enabled": false,
+    "api_key": "",
+    "base_url": "https://www.virustotal.com/vtapi/v2"
+  },
+  "shodan": {
+    "enabled": false,
+    "api_key": "",
+    "base_url": "https://api.shodan.io"
+  },
+  "abuseipdb": {
+    "enabled": false,
+    "api_key": "",
+    "base_url": "https://api.abuseipdb.com/api/v2"
+  },
+  "securitytrails": {
+    "enabled": false,
+    "api_key": "",
+    "base_url": "https://api.securitytrails.com/v1"
+  },
+  "local_scanners": {
+    "nmap": true,
+    "sslyze": true,
+    "openvas": false
+  },
+  "scan_options": {
+    "privileged_mode": false,
+    "timeout": 300,
+    "max_retries": 3
+  }
+} 

@@ -37,6 +37,10 @@ try:
     from cli.backup import backup_app
     from cli.system import system_app
     from cli.bot import bot_app
+    from cli.monitor import monitor_app
+    from cli.utils import utils_app
+    from cli.security import security_app
+    from cli.notifications import notifications_app
     
     cli_main_app.add_typer(config_app, name="config", help="🔧 Управление конфигурацией.")
     cli_main_app.add_typer(db_app, name="db", help="🗄️ Управление базой данных.")
@@ -45,6 +49,10 @@ try:
     cli_main_app.add_typer(backup_app, name="backup", help="💾 Управление бэкапами.")
     cli_main_app.add_typer(system_app, name="system", help="🛠️ Системные команды.")
     cli_main_app.add_typer(bot_app, name="bot", help="🤖 Взаимодействие с Bot API.")
+    cli_main_app.add_typer(monitor_app, name="monitor", help="📊 Мониторинг и аналитика.")
+    cli_main_app.add_typer(utils_app, name="utils", help="🛠️ Утилитарные инструменты.")
+    cli_main_app.add_typer(security_app, name="security", help="🔒 Управление безопасностью.")
+    cli_main_app.add_typer(notifications_app, name="notifications", help="🔔 Управление уведомлениями.")
 
     # Отдельные команды
     from cli.run import run_command

@@ -921,14 +921,293 @@ SYNC_DEPS_WIP_MSG = """
 [yellow]Команда 'module sync-deps' находится в разработке.[/]
 [yellow]Планируется интеграция с `pip-tools` для сбора и компиляции зависимостей из манифестов активных модулей.[/]
 """
-@module_app.command(name="list-available", help="Показать модули, доступные в репозитории (НЕ РЕАЛИЗОВАНО).")
-def list_available_modules_cmd(): console.print(SHOP_COMMANDS_WIP_MSG)
-@module_app.command(name="install", help="Установить модуль из репозитория (НЕ РЕАЛИЗОВАНО).")
-def install_module_cmd(module_name: str = typer.Argument(..., help="Имя модуля для установки.")): console.print(SHOP_COMMANDS_WIP_MSG)
-@module_app.command(name="update", help="Обновить модуль из репозитория (НЕ РEАЛИЗОВАНО).")
-def update_module_cmd(module_name: str = typer.Argument(..., help="Имя модуля для обновления, или '--all'."), force: bool = typer.Option(False, "--force", help="Принудительное обновление.")): console.print(SHOP_COMMANDS_WIP_MSG)
-@module_app.command(name="sync-deps", help="Собрать Python-зависимости модулей (НЕ РЕАЛИЗОВАНО).")
-def sync_deps_cmd(): console.print(SYNC_DEPS_WIP_MSG)
+
+@module_app.command(name="list-available", help="Показать модули, доступные в репозитории и локально.")
+def list_available_modules_cmd(
+    local_only: bool = typer.Option(False, "--local-only", help="Показать только локальные модули"),
+    show_details: bool = typer.Option(False, "--details", "-d", help="Показать детальную информацию о модулях"),
+    format: str = typer.Option("table", "--format", "-f", help="Формат вывода: table, json, yaml")
+):
+    try:
+        asyncio.run(_list_available_modules_async(local_only, show_details, format))
+    except typer.Exit: raise
+    except Exception as e:
+        console.print(f"[bold red]Неожиданная ошибка в команде 'module list-available': {e}[/]")
+        raise typer.Exit(code=1)
+
+async def _list_available_modules_async(local_only: bool, show_details: bool, format: str):
+    """Показать доступные модули"""
+    console.print(Panel("[bold blue]ПОИСК ДОСТУПНЫХ МОДУЛЕЙ[/]", expand=False, border_style="blue"))
+    
+    loader = await _get_module_loader_instance_async()
+    if not loader: raise typer.Exit(code=1)
+    
+    # Получаем локальные модули
+    local_modules = loader.get_all_modules_info()
+    
+    if local_only:
+        console.print("[yellow]Показываю только локальные модули...[/]")
+        await _display_modules(local_modules, "Локальные модули", show_details, format)
+        return
+    
+    # Показываем локальные модули
+    console.print("[cyan]Локальные модули:[/]")
+    await _display_modules(local_modules, "Локальные модули", show_details, format)
+    
+    # Показываем информацию о репозитории (пока заглушка)
+    console.print("\n[cyan]Модули из репозитория:[/]")
+    console.print("[yellow]Функция поиска модулей в репозитории находится в разработке.[/]")
+    console.print("[dim]В будущем здесь будет отображаться список модулей из центрального репозитория.[/]")
+    
+    # Показываем статистику
+    enabled_count = sum(1 for m in local_modules if m.is_enabled)
+    total_count = len(local_modules)
+    
+    console.print(f"\n[bold green]Статистика:[/]")
+    console.print(f"  📦 Всего локальных модулей: {total_count}")
+    console.print(f"  ✅ Включено: {enabled_count}")
+    console.print(f"  ❌ Отключено: {total_count - enabled_count}")
+
+async def _display_modules(modules: List[Any], title: str, show_details: bool, format: str):
+    """Отобразить список модулей"""
+    if not modules:
+        console.print(f"[dim]Нет {title.lower()}[/]")
+        return
+    
+    if format == "json":
+        await _display_modules_json(modules, show_details)
+    elif format == "yaml":
+        await _display_modules_yaml(modules, show_details)
+    else:
+        await _display_modules_table(modules, show_details)
+
+async def _display_modules_table(modules: List[Any], show_details: bool):
+    """Отобразить модули в виде таблицы"""
+    from rich.table import Table
+    
+    table = Table(title="Доступные модули")
+    table.add_column("Имя", style="cyan", no_wrap=True)
+    table.add_column("Статус", style="green")
+    table.add_column("Версия", style="yellow")
+    table.add_column("Описание", style="white")
+    
+    if show_details:
+        table.add_column("Автор", style="blue")
+        table.add_column("Тип", style="magenta")
+    
+    for module in modules:
+        status = "✅ Включен" if module.is_enabled else "❌ Отключен"
+        if module.error:
+            status = f"⚠️ Ошибка: {module.error}"
+        
+        version = module.manifest.version if module.manifest else "Не указана"
+        description = module.manifest.description if module.manifest else "Нет описания"
+        
+        row = [module.name, status, version, description]
+        
+        if show_details:
+            author = module.manifest.author if module.manifest else "Не указан"
+            module_type = "Системный" if module.is_system_module else "Пользовательский"
+            row.extend([author, module_type])
+        
+        table.add_row(*row)
+    
+    console.print(table)
+
+async def _display_modules_json(modules: List[Any], show_details: bool):
+    """Отобразить модули в формате JSON"""
+    import json
+    
+    modules_data = []
+    for module in modules:
+        module_data = {
+            "name": module.name,
+            "enabled": module.is_enabled,
+            "error": module.error,
+            "is_system_module": module.is_system_module
+        }
+        
+        if module.manifest:
+            module_data.update({
+                "version": module.manifest.version,
+                "description": module.manifest.description,
+                "author": module.manifest.author,
+                "website": module.manifest.website,
+                "email": module.manifest.email,
+                "license": module.manifest.license
+            })
+        
+        modules_data.append(module_data)
+    
+    console.print(json.dumps(modules_data, indent=2, ensure_ascii=False))
+
+async def _display_modules_yaml(modules: List[Any], show_details: bool):
+    """Отобразить модули в формате YAML"""
+    import yaml
+    
+    modules_data = []
+    for module in modules:
+        module_data = {
+            "name": module.name,
+            "enabled": module.is_enabled,
+            "error": module.error,
+            "is_system_module": module.is_system_module
+        }
+        
+        if module.manifest:
+            module_data.update({
+                "version": module.manifest.version,
+                "description": module.manifest.description,
+                "author": module.manifest.author,
+                "website": module.manifest.website,
+                "email": module.manifest.email,
+                "license": module.manifest.license
+            })
+        
+        modules_data.append(module_data)
+    
+    console.print(yaml.dump(modules_data, default_flow_style=False, allow_unicode=True))
+
+@module_app.command(name="install", help="Установить модуль из репозитория или локального источника.")
+def install_module_cmd(
+    module_name: str = typer.Argument(..., help="Имя модуля для установки."),
+    source: str = typer.Option("local", "--source", "-s", help="Источник модуля: local, repo, url"),
+    url: Optional[str] = typer.Option(None, "--url", help="URL для установки модуля из интернета")
+):
+    try:
+        asyncio.run(_install_module_async(module_name, source, url))
+    except typer.Exit: raise
+    except Exception as e:
+        console.print(f"[bold red]Неожиданная ошибка в команде 'module install': {e}[/]")
+        raise typer.Exit(code=1)
+
+async def _install_module_async(module_name: str, source: str, url: Optional[str]):
+    """Установить модуль"""
+    console.print(Panel(f"[bold blue]УСТАНОВКА МОДУЛЯ: {module_name}[/]", expand=False, border_style="blue"))
+    
+    if source == "local":
+        await _install_local_module(module_name)
+    elif source == "repo":
+        console.print("[yellow]Установка из репозитория пока не реализована.[/]")
+        console.print("[dim]В будущем здесь будет возможность установки модулей из центрального репозитория.[/]")
+    elif source == "url" and url:
+        await _install_module_from_url(module_name, url)
+    else:
+        console.print("[bold red]Ошибка: Неверный источник или отсутствует URL.[/]")
+        raise typer.Exit(code=1)
+
+async def _install_local_module(module_name: str):
+    """Установить локальный модуль (копирование из другой директории)"""
+    console.print(f"[cyan]Поиск локального модуля '{module_name}'...[/]")
+    
+    # Здесь можно добавить логику поиска модуля в других директориях
+    console.print("[yellow]Установка локальных модулей пока не реализована.[/]")
+    console.print("[dim]В будущем здесь будет возможность копирования модулей из других директорий.[/]")
+
+async def _install_module_from_url(module_name: str, url: str):
+    """Установить модуль из URL"""
+    console.print(f"[cyan]Установка модуля '{module_name}' из URL: {url}[/]")
+    
+    # Здесь можно добавить логику загрузки и установки модуля из URL
+    console.print("[yellow]Установка модулей из URL пока не реализована.[/]")
+    console.print("[dim]В будущем здесь будет возможность загрузки модулей из интернета.[/]")
+
+@module_app.command(name="update", help="Обновить модуль из репозитория или локального источника.")
+def update_module_cmd(
+    module_name: str = typer.Argument(..., help="Имя модуля для обновления, или '--all'."),
+    force: bool = typer.Option(False, "--force", help="Принудительное обновление.")
+):
+    try:
+        asyncio.run(_update_module_async(module_name, force))
+    except typer.Exit: raise
+    except Exception as e:
+        console.print(f"[bold red]Неожиданная ошибка в команде 'module update': {e}[/]")
+        raise typer.Exit(code=1)
+
+async def _update_module_async(module_name: str, force: bool):
+    """Обновить модуль"""
+    console.print(Panel(f"[bold blue]ОБНОВЛЕНИЕ МОДУЛЯ: {module_name}[/]", expand=False, border_style="blue"))
+    
+    if module_name == "--all":
+        console.print("[yellow]Массовое обновление модулей пока не реализовано.[/]")
+        console.print("[dim]В будущем здесь будет возможность обновления всех модулей сразу.[/]")
+        return
+    
+    console.print(f"[cyan]Обновление модуля '{module_name}'...[/]")
+    console.print("[yellow]Обновление модулей пока не реализовано.[/]")
+    console.print("[dim]В будущем здесь будет возможность обновления модулей из репозитория.[/]")
+
+@module_app.command(name="sync-deps", help="Собрать Python-зависимости модулей.")
+def sync_deps_cmd(
+    output_file: Optional[str] = typer.Option(None, "--output", "-o", help="Файл для сохранения зависимостей"),
+    format: str = typer.Option("requirements", "--format", "-f", help="Формат: requirements, pip-tools")
+):
+    try:
+        asyncio.run(_sync_deps_async(output_file, format))
+    except typer.Exit: raise
+    except Exception as e:
+        console.print(f"[bold red]Неожиданная ошибка в команде 'module sync-deps': {e}[/]")
+        raise typer.Exit(code=1)
+
+async def _sync_deps_async(output_file: Optional[str], format: str):
+    """Синхронизировать зависимости модулей"""
+    console.print(Panel("[bold blue]СИНХРОНИЗАЦИЯ ЗАВИСИМОСТЕЙ МОДУЛЕЙ[/]", expand=False, border_style="blue"))
+    
+    loader = await _get_module_loader_instance_async()
+    if not loader: raise typer.Exit(code=1)
+    
+    # Получаем все активные модули
+    active_modules = [m for m in loader.get_all_modules_info() if m.is_enabled]
+    
+    if not active_modules:
+        console.print("[yellow]Нет активных модулей для анализа зависимостей.[/]")
+        return
+    
+    console.print(f"[cyan]Анализ зависимостей для {len(active_modules)} активных модулей...[/]")
+    
+    # Собираем все зависимости
+    all_dependencies = set()
+    module_deps = {}
+    
+    for module in active_modules:
+        if module.manifest and module.manifest.dependencies:
+            deps = module.manifest.dependencies
+            all_dependencies.update(deps)
+            module_deps[module.name] = deps
+            console.print(f"  📦 {module.name}: {', '.join(deps)}")
+        else:
+            console.print(f"  📦 {module.name}: нет зависимостей")
+    
+    if not all_dependencies:
+        console.print("[yellow]Не найдено зависимостей в активных модулях.[/]")
+        return
+    
+    # Формируем результат
+    if format == "requirements":
+        result = "\n".join(sorted(all_dependencies))
+    elif format == "pip-tools":
+        result = "# requirements.txt для активных модулей\n"
+        result += "\n".join(sorted(all_dependencies))
+    else:
+        console.print(f"[bold red]Неизвестный формат: {format}[/]")
+        raise typer.Exit(code=1)
+    
+    # Выводим или сохраняем результат
+    if output_file:
+        try:
+            with open(output_file, 'w', encoding='utf-8') as f:
+                f.write(result)
+            console.print(f"[green]Зависимости сохранены в файл: {output_file}[/]")
+        except Exception as e:
+            console.print(f"[bold red]Ошибка при сохранении в файл: {e}[/]")
+            raise typer.Exit(code=1)
+    else:
+        console.print(f"\n[bold green]Собранные зависимости:[/]")
+        console.print(result)
+    
+    console.print(f"\n[cyan]Статистика:[/]")
+    console.print(f"  📦 Модулей с зависимостями: {len(module_deps)}")
+    console.print(f"  📋 Всего уникальных зависимостей: {len(all_dependencies)}")
 
 if __name__ == "__main__":
     module_app()

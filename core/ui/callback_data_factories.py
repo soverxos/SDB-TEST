@@ -67,6 +67,12 @@ class AdminLogsPanelNavigate(CallbackData, prefix=ADMIN_LOGS_PREFIX):
     item_id: Optional[str] = None 
     page: Optional[int] = None
 
+# Новый callback data для просмотра логов
+ADMIN_LOGS_VIEWER_PREFIX = "sdb_admin_logs_viewer"
+class AdminLogsViewerNavigate(CallbackData, prefix=ADMIN_LOGS_VIEWER_PREFIX):
+    action: str 
+    payload: Optional[str] = None  # Для передачи имени файла
+
 class AdminPanelNavigate(CallbackData, prefix=ADMIN_CALLBACK_PREFIX): 
     section: str 
     action: Optional[str] = None
