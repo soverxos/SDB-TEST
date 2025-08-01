@@ -1,71 +1,101 @@
-# cli_commands/cli_utils.py
-
-from typing import Optional, Any, Tuple
-from pathlib import Path
+# --- НАЧАЛО ФАЙЛА cli/utils.py ---
 import asyncio
-import typer # Для typer.confirm
-from rich.console import Console # Можно использовать для вывода, если понадобится
+from pathlib import Path
+from typing import Any, Dict, Optional, Tuple
 
-# console_cli_utils = Console() # Если нужен свой экземпляр консоли для утилит
+import typer
+import yaml
+from rich.console import Console
+
+# --- Константы, используемые в CLI ---
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+USER_CONFIG_DIR_NAME = "Config"
+USER_CORE_CONFIG_FILENAME = "core_settings.yaml"
+USER_MODULES_CONFIG_DIR_NAME = "modules_settings"
+
+sdb_console = Console()
+
+# --- Функции для работы с YAML ---
+
+def get_yaml_editor():
+    """Возвращает экземпляр ruamel.yaml.YAML для сохранения комментариев."""
+    try:
+        from ruamel.yaml import YAML
+        yaml_editor = YAML()
+        yaml_editor.indent(mapping=2, sequence=4, offset=2)
+        yaml_editor.preserve_quotes = True
+        return yaml_editor
+    except ImportError:
+        sdb_console.print("[yellow]Предупреждение: библиотека 'ruamel.yaml' не установлена. Комментарии и форматирование в YAML файлах могут быть утеряны при изменении. Установите ее: `pip install ruamel.yaml`[/yellow]")
+        return None
+
+def read_yaml_file(path: Path) -> Optional[Dict[str, Any]]:
+    """Читает YAML файл, возвращая его содержимое как словарь."""
+    if not path.is_file():
+        return None
+    try:
+        editor = get_yaml_editor()
+        if editor:
+            return editor.load(path)
+        else:
+            with open(path, 'r', encoding='utf-8') as f:
+                return yaml.safe_load(f)
+    except Exception as e:
+        sdb_console.print(f"[bold red]Ошибка чтения YAML файла {path}: {e}[/bold red]")
+        return None
+
+def write_yaml_file(path: Path, data: Dict[str, Any]) -> bool:
+    """Записывает словарь в YAML файл."""
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        editor = get_yaml_editor()
+        if editor:
+            with open(path, 'w', encoding='utf-8') as f:
+                editor.dump(data, f)
+        else:
+            with open(path, 'w', encoding='utf-8') as f:
+                yaml.dump(data, f, indent=2, sort_keys=False, allow_unicode=True)
+        return True
+    except Exception as e:
+        sdb_console.print(f"[bold red]Ошибка записи YAML файла {path}: {e}[/bold red]")
+        return False
+
+# --- Вспомогательные функции из старой версии ---
 
 async def get_sdb_services_for_cli(
     init_db: bool = False,
     init_rbac: bool = False,
-) -> Tuple[Optional[Any], Optional[Any], Optional[Any]]: # (settings, db_manager, rbac_service)
-    """
-    Вспомогательная асинхронная функция для получения основных сервисов SDB,
-    необходимых для выполнения многих CLI команд.
-    Инициализирует DBManager "на лету" и, опционально, RBACService.
-    Возвращает кортеж (settings, db_manager, rbac_service).
-    DBManager нужно будет закрыть вручную через await db_manager.dispose().
-    """
+) -> Tuple[Optional[Any], Optional[Any], Optional[Any]]:
+    """Вспомогательная функция для получения основных сервисов SDB."""
     settings_instance: Optional[Any] = None
     db_manager_instance: Optional[Any] = None
     rbac_service_instance: Optional[Any] = None
 
     try:
-        from core.app_settings import settings # Загружаем глобальные настройки
+        from core.app_settings import settings
         settings_instance = settings
-
-        if init_db or init_rbac: # DBManager нужен для RBAC
+        if init_db or init_rbac:
             from core.database.manager import DBManager
-            # Используем app_settings=settings, чтобы DBManager правильно строил пути и т.д.
             db_m = DBManager(db_settings=settings.db, app_settings=settings)
             await db_m.initialize()
             db_manager_instance = db_m
-
             if init_rbac and db_manager_instance:
                 from core.rbac.service import RBACService
-                rbac_service_instance = RBACService(db_manager=db_manager_instance) # Передаем DBManager
-
+                rbac_service_instance = RBACService(services=None, db_manager=db_manager_instance)
         return settings_instance, db_manager_instance, rbac_service_instance
-
-    except ImportError as e_imp:
-        # Ошибки импорта должны быть обработаны в вызывающем коде, здесь просто перевыбрасываем
-        # Console().print(f"[bold red]Ошибка импорта в get_sdb_services_for_cli: {e_imp}[/]")
+    except ImportError as e:
         raise
-    except Exception as e_init:
-        # Console().print(f"[bold red]Ошибка инициализации сервисов в get_sdb_services_for_cli: {e_init}[/]")
-        if db_manager_instance: # Попытаться закрыть, если что-то создалось до ошибки
+    except Exception as e:
+        if db_manager_instance:
             await db_manager_instance.dispose()
         raise
 
-
 def confirm_action(prompt_message: str, default_choice: bool = False, abort_on_false: bool = True) -> bool:
-    """
-    Общая функция для запроса подтверждения действия у пользователя через Typer.
-    Если abort_on_false=True и пользователь отвечает "нет", вызывает typer.Abort().
-    Возвращает True, если пользователь ответил "да".
-    """
-    confirmed = typer.confirm(prompt_message, default=default_choice, abort=abort_on_false)
-    # Если abort_on_false=True и пользователь выбрал "нет", typer.confirm уже вызовет typer.Abort().
-    # Если abort_on_false=False и пользователь выбрал "нет", вернется False.
-    # Если пользователь выбрал "да", вернется True.
-    return confirmed
-
+    """Общая функция для запроса подтверждения действия у пользователя."""
+    return typer.confirm(prompt_message, default=default_choice, abort=abort_on_false)
 
 def format_size(size_bytes: int) -> str:
-    """Форматирует размер в байтах в человекочитаемый вид (KB, MB, GB)."""
+    """Форматирует размер в байтах в человекочитаемый вид."""
     if size_bytes < 1024:
         return f"{size_bytes} B"
     elif size_bytes < 1024**2:
@@ -74,3 +104,4 @@ def format_size(size_bytes: int) -> str:
         return f"{size_bytes/(1024**2):.2f} MB"
     else:
         return f"{size_bytes/(1024**3):.2f} GB"
+# --- КОНЕЦ ФАЙЛА cli/utils.py ---

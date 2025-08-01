@@ -23,8 +23,7 @@ except ImportError:
 
 from .utils import get_sdb_services_for_cli
 
-# Эта консоль будет инициализирована в главном файле sdb и передана сюда
-# Но для подстраховки мы проверяем ее наличие
+# Эта консоль будет инициализирована в главном файле sdb
 sdb_console: Console = Console()
 
 PID_FILENAME = "sdb_bot.pid"
@@ -273,7 +272,8 @@ def stop_command(
 def restart_command(
     force_stop: bool = typer.Option(False, "--force-stop", help="Использовать --force при остановке перед перезапуском."),
     stop_timeout: int = typer.Option(5, "--stop-timeout", help="Время ожидания (сек) для команды stop.", min=1, max=60),
-    background: bool = typer.Option(True, "--background/--no-background", "-b", help="Запустить бота в фоновом режиме после перезапуска."),
+    # --- ИЗМЕНЕНИЕ ЗДЕСЬ: default=False ---
+    background: bool = typer.Option(False, "--background", "-b", help="Запустить бота в фоновом режиме после перезапуска."),
     debug: bool = typer.Option(False, "--debug", "-d", help="Запустить бота в режиме отладки после перезапуска.")
 ):
     """Перезапускает SDB бота: останавливает (если запущен) и затем запускает."""
@@ -283,37 +283,39 @@ def restart_command(
     stop_failed = False
 
     sdb_executable_str: Optional[str] = None
-    if Path(sys.argv[0]).is_absolute():
-        sdb_executable_str = sys.argv[0]
-    else:
-        project_root = Path(sys.argv[0]).parent.resolve()
-        sdb_py_path = project_root / "sdb.py"
-        sdb_path = project_root / "sdb"
-        if sdb_path.exists() and os.access(sdb_path, os.X_OK):
-            sdb_executable_str = str(sdb_path)
-        elif sdb_py_path.exists():
-            sdb_executable_str = str(sdb_py_path)
+    project_root = Path(sys.argv[0]).parent.resolve()
+    
+    # Ищем sdb (исполняемый) или sdb.py
+    sdb_path = project_root / "sdb"
+    sdb_py_path = project_root / "sdb.py"
 
+    if sdb_path.exists() and os.access(sdb_path, os.X_OK):
+        sdb_executable_str = str(sdb_path)
+    elif sdb_py_path.exists():
+        sdb_executable_str = str(sdb_py_path)
+    
     if not sdb_executable_str:
         sdb_console.print(f"[bold red]Не удалось определить исполняемый файл SDB CLI.[/bold red]")
         raise typer.Exit(1)
 
     try:
-        stop_command_args = [sys.executable, sdb_executable_str, "stop", f"--timeout={stop_timeout}"]
+        # Вызываем команду stop через subprocess, чтобы она работала в своем контексте
+        stop_command_args = [sdb_executable_str, "stop", f"--timeout={stop_timeout}"]
         if force_stop:
             stop_command_args.append("--force")
 
+        sdb_console.print(f"[dim]Вызов команды остановки: {' '.join(stop_command_args)}[/dim]")
         stop_process_result = subprocess.run(stop_command_args, capture_output=True, text=True, encoding='utf-8')
 
-        if stop_process_result.stdout: sdb_console.print(f"[dim cyan]Вывод 'stop':[/]\n{stop_process_result.stdout.strip()}")
-        if stop_process_result.stderr: sdb_console.print(f"[dim yellow]Ошибки от 'stop':[/]\n{stop_process_result.stderr.strip()}")
-
+        if stop_process_result.stdout:
+            sdb_console.print(f"[dim cyan]Вывод 'stop':[/]\n{stop_process_result.stdout.strip()}")
+        if stop_process_result.stderr:
+            sdb_console.print(f"[dim yellow]Ошибки от 'stop':[/]\n{stop_process_result.stderr.strip()}")
         if stop_process_result.returncode != 0:
             sdb_console.print(f"[bold red]Ошибка на фазе остановки (код: {stop_process_result.returncode}).[/bold red]")
             if not typer.confirm("Продолжить попытку запуска?", default=False):
                 raise typer.Exit(code=1)
             stop_failed = True
-
     except Exception as e_stop_wrapper:
         sdb_console.print(Text.assemble(("[bold red]Ошибка при вызове 'stop': ", "bold red"), Text(str(e_stop_wrapper))))
         if not typer.confirm("Продолжить попытку запуска?", default=False):
@@ -325,16 +327,25 @@ def restart_command(
 
     sdb_console.print("\n[cyan]Шаг 2: Запуск нового экземпляра бота...[/cyan]")
     try:
-        start_command_args = [sys.executable, sdb_executable_str, "run"]
-        if background: start_command_args.append("--background")
-        if debug: start_command_args.append("--debug")
-        
-        # Для фонового режима мы просто запускаем и выходим
+        start_command_args = [sdb_executable_str, "run"]
         if background:
-            subprocess.Popen(start_command_args)
-            sdb_console.print("[green]Команда запуска бота в фоновом режиме отправлена.[/green]")
-        else: # В обычном режиме ждем завершения и показываем вывод
+            start_command_args.append("--background")
+        if debug:
+            start_command_args.append("--debug")
+
+        sdb_console.print(f"[dim]Вызов команды запуска: {' '.join(start_command_args)}[/dim]")
+
+        if background:
+            # Запускаем и "забываем" - это и есть фоновый режим
+            subprocess.Popen(start_command_args, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+            sdb_console.print("[green]Команда запуска бота в фоновом режиме успешно отправлена.[/green]")
+        else:
+            # --- ИЗМЕНЕНИЕ ЗДЕСЬ: Запускаем процесс в интерактивном режиме ---
+            # Просто вызываем команду, и ее вывод пойдет в текущий терминал.
+            # Не используем capture_output=True
             subprocess.run(start_command_args)
+            # Код здесь будет ждать завершения процесса бота
+            sdb_console.print("[bold green]Интерактивный сеанс бота завершен.[/bold green]")
 
     except Exception as e_start_wrapper:
         sdb_console.print(Text.assemble(("[bold red]Ошибка на этапе запуска: ", "bold red"), Text(str(e_start_wrapper))))
@@ -344,4 +355,4 @@ def restart_command(
     if background:
         sdb_console.print("  Проверьте статус бота через: [cyan]sdb status[/cyan]")
 
-# --- КОНЕЦ ФАЙЛА cli/process.py ---```
+# --- КОНЕЦ ФАЙЛА cli/process.py ---

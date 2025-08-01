@@ -8,6 +8,7 @@ pydantic # Используем Pydantic v2
 pydantic-settings
 pydantic-extra-types # Для DSN и других доп. типов
 PyYAML>=6.0
+ruamel.yaml # Для сохранения комментариев в YAML файлах
 
 # Database (SQLAlchemy & Alembic)
 SQLAlchemy[asyncio] # [asyncio] для поддержки асинхронных драйверов
