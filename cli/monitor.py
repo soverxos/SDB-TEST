@@ -1105,21 +1105,7 @@ def monitor_dashboard_cmd(
     theme: str = typer.Option("light", "--theme", "-t", help="Тема интерфейса: dark/light")
 ):
     """Запускает веб-интерфейс для мониторинга."""
-    console.print(Panel.fit("🌐 Веб-дашборд мониторинга", style="bold cyan"))
-    console.print(f"🔗 URL: http://{host}:{port}/monitor")
-    console.print(f"📊 Доступные метрики: CPU, Memory, Disk, Network")
-    console.print(f"🔔 Алерты: В реальном времени")
-    console.print(f"📈 Графики: Интерактивные")
-    console.print(f"🎨 Тема: {theme.capitalize()}")
-    console.print()
-    console.print("📋 Функции дашборда:")
-    console.print("   📊 Графики производительности")
-    console.print("   🔔 Управление алертами")
-    console.print("   📋 Анализ логов")
-    console.print("   📈 Отчеты")
-    console.print("   ⚙️ Настройки мониторинга")
-    console.print()
-    console.print("⚠️ Функция в разработке")
+    asyncio.run(_monitor_dashboard_async(port, host, theme))
 
 @monitor_app.command(name="report", help="Генерирует отчеты о производительности.")
 def monitor_report_cmd(
