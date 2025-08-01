@@ -365,7 +365,3 @@ async def get_user_direct_perms_keyboard(
     builder.row(get_back_to_admin_main_menu_button())
     return builder.as_markup()
 
-def get_admin_main_menu_keyboard_placeholder() -> InlineKeyboardMarkup:
-    builder = InlineKeyboardBuilder()
-    builder.button(text="Временная кнопка", callback_data="temp")
-    return builder.as_markup()

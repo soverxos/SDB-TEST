@@ -602,8 +602,39 @@ async def _notifications_configure_async(channel: str, config_file: Optional[str
     
     if config_file:
         console.print(f"[cyan]Файл конфигурации:[/] {config_file}")
-        # Здесь была бы загрузка конфигурации из файла
-        console.print("[yellow]Загрузка конфигурации из файла пока не реализована[/]")
+        
+        # Загружаем конфигурацию из файла
+        try:
+            config_path = Path(config_file)
+            if not config_path.exists():
+                console.print(f"[bold red]Файл конфигурации не найден: {config_file}[/]")
+                raise typer.Exit(code=1)
+            
+            # Читаем файл конфигурации
+            with open(config_path, 'r', encoding='utf-8') as f:
+                if config_path.suffix.lower() in ['.yaml', '.yml']:
+                    import yaml
+                    file_config = yaml.safe_load(f)
+                elif config_path.suffix.lower() == '.json':
+                    import json
+                    file_config = json.load(f)
+                else:
+                    console.print(f"[bold red]Неподдерживаемый формат файла: {config_path.suffix}[/]")
+                    raise typer.Exit(code=1)
+            
+            # Применяем конфигурацию к каналу
+            if channel in file_config:
+                channel_config = file_config[channel]
+                channels[channel].update(channel_config)
+                _save_notifications_config(config)
+                console.print(f"[green]Конфигурация для канала '{channel}' успешно загружена из файла![/]")
+            else:
+                console.print(f"[yellow]Канал '{channel}' не найден в файле конфигурации.[/]")
+                console.print(f"[cyan]Доступные каналы в файле: {', '.join(file_config.keys())}[/]")
+                
+        except Exception as e:
+            console.print(f"[bold red]Ошибка при загрузке конфигурации: {e}[/]")
+            raise typer.Exit(code=1)
     elif interactive:
         await _configure_channel_interactive(channel, channel_info, config)
     else:

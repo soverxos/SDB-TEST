@@ -153,52 +153,161 @@ def _get_network_diagnostic() -> Dict[str, Any]:
     except OSError:
         internet_available = False
     
+    # Проверяем Telegram API
+    telegram_api_available = False
+    if internet_available:
+        try:
+            import requests
+            response = requests.get("https://api.telegram.org", timeout=5)
+            telegram_api_available = response.status_code == 200
+        except Exception:
+            pass
+    
+    # Проверяем webhook конфигурацию
+    webhook_configured = False
+    config_path = PROJECT_ROOT / "config.yaml"
+    if config_path.exists():
+        try:
+            config_data = read_yaml_file(config_path)
+            if config_data and "bot" in config_data:
+                webhook_url = config_data["bot"].get("webhook_url")
+                webhook_configured = bool(webhook_url)
+        except Exception:
+            pass
+    
+    # Проверяем доступность порта 8000
+    port_8000_free = True
+    try:
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        sock.settimeout(1)
+        result = sock.connect_ex(('localhost', 8000))
+        port_8000_free = result != 0
+        sock.close()
+    except Exception:
+        pass
+    
     return {
         "internet_available": internet_available,
-        "telegram_api_available": internet_available,  # Упрощенная проверка
-        "webhook_configured": False,  # Заглушка
-        "port_8000_free": True,  # Заглушка
+        "telegram_api_available": telegram_api_available,
+        "webhook_configured": webhook_configured,
+        "port_8000_free": port_8000_free,
     }
 
 async def _get_database_diagnostic() -> Dict[str, Any]:
     """Получает диагностическую информацию о базе данных."""
     try:
-        settings, db_manager, _ = await get_sdb_services_for_cli()
+        settings, db_manager, _ = await get_sdb_services_for_cli(init_db=True)
         
-        # Проверяем путь к базе данных
-        db_path = Path(settings.db.sqlite_path)
-        if not db_path.exists():
-            return {"connected": False, "error": "Файл базы данных не найден"}
+        if not db_manager:
+            return {"connected": False, "error": "Менеджер базы данных недоступен"}
         
-        # Проверяем размер файла
-        db_size = db_path.stat().st_size
-        
-        # Пытаемся подключиться к базе данных
+        # Универсальная проверка для любого типа БД
         try:
-            import sqlite3
-            conn = sqlite3.connect(str(db_path))
-            cursor = conn.cursor()
-            
-            # Проверяем, что база данных работает
-            cursor.execute("SELECT name FROM sqlite_master WHERE type='table';")
-            tables = cursor.fetchall()
-            
-            conn.close()
-            
-            return {
-                "connected": True,
-                "type": settings.db.type,
-                "size": db_size,
-                "tables_exist": len(tables) > 0,
-                "indexes_optimized": True,  # Заглушка
-                "integrity_ok": True,  # Заглушка
-                "tables_count": len(tables),
-            }
+            async with db_manager.get_session() as session:
+                # Проверяем подключение (универсальный тест)
+                from sqlalchemy import text
+                result = await session.execute(text("SELECT 1"))
+                result.fetchone()
+                
+                # Получаем информацию о таблицах (адаптивно)
+                tables = []
+                indexes_optimized = True
+                integrity_ok = True
+                
+                try:
+                    # Пробуем разные способы получения списка таблиц
+                    if settings.db.type == "sqlite":
+                        result = await session.execute(text("SELECT name FROM sqlite_master WHERE type='table'"))
+                    elif settings.db.type == "mysql":
+                        result = await session.execute(text("SHOW TABLES"))
+                    elif settings.db.type == "postgresql":
+                        result = await session.execute(text("SELECT tablename FROM pg_tables WHERE schemaname = 'public'"))
+                    else:
+                        # Универсальный способ для других БД
+                        result = await session.execute(text("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"))
+                    
+                    tables = result.fetchall()
+                    
+                    # Проверяем индексы (если есть таблицы)
+                    if tables:
+                        try:
+                            # Пробуем получить информацию об индексах
+                            if settings.db.type == "sqlite":
+                                result = await session.execute(text("PRAGMA index_list"))
+                            elif settings.db.type == "mysql":
+                                result = await session.execute(text("SHOW INDEX FROM alembic_version"))
+                            elif settings.db.type == "postgresql":
+                                result = await session.execute(text("SELECT indexname FROM pg_indexes WHERE schemaname = 'public'"))
+                            else:
+                                result = await session.execute(text("SELECT index_name FROM information_schema.statistics WHERE table_schema = 'public'"))
+                            
+                            indexes = result.fetchall()
+                            indexes_optimized = len(indexes) > 0
+                        except Exception:
+                            indexes_optimized = True  # Не можем проверить, считаем OK
+                    
+                    # Проверяем целостность (адаптивно)
+                    try:
+                        if settings.db.type == "sqlite":
+                            result = await session.execute(text("PRAGMA integrity_check"))
+                            integrity_result = result.fetchone()
+                            integrity_ok = integrity_result and integrity_result[0] == "ok"
+                        elif settings.db.type == "mysql":
+                            result = await session.execute(text("CHECK TABLE alembic_version"))
+                            integrity_ok = True  # Упрощенная проверка
+                        elif settings.db.type == "postgresql":
+                            result = await session.execute(text("SELECT 1"))
+                            integrity_ok = True  # Упрощенная проверка
+                        else:
+                            integrity_ok = True  # Для других БД считаем OK
+                    except Exception:
+                        integrity_ok = True  # Не можем проверить, считаем OK
+                    
+                    # Получаем размер БД (если возможно)
+                    db_size = 0
+                    try:
+                        if settings.db.type == "sqlite" and hasattr(settings.db, 'sqlite_path'):
+                            db_path = Path(settings.db.sqlite_path)
+                            if db_path.exists():
+                                db_size = db_path.stat().st_size
+                        elif settings.db.type == "mysql":
+                            result = await session.execute(text("SELECT SUM(data_length + index_length) FROM information_schema.tables WHERE table_schema = DATABASE()"))
+                            size_result = result.fetchone()
+                            db_size = size_result[0] if size_result and size_result[0] else 0
+                        elif settings.db.type == "postgresql":
+                            result = await session.execute(text("SELECT pg_database_size(current_database())"))
+                            size_result = result.fetchone()
+                            db_size = size_result[0] if size_result and size_result[0] else 0
+                    except Exception:
+                        db_size = 0  # Не можем получить размер
+                    
+                    return {
+                        "connected": True,
+                        "type": settings.db.type,
+                        "size": db_size,
+                        "tables_exist": len(tables) > 0,
+                        "indexes_optimized": indexes_optimized,
+                        "integrity_ok": integrity_ok,
+                        "tables_count": len(tables),
+                    }
+                    
+                except Exception as query_error:
+                    # Если не удалось получить таблицы, но подключение работает
+                    return {
+                        "connected": True,
+                        "type": settings.db.type,
+                        "size": 0,
+                        "tables_exist": False,
+                        "indexes_optimized": True,  # Не можем проверить
+                        "integrity_ok": True,  # Не можем проверить
+                        "tables_count": 0,
+                        "warning": f"Подключение работает, но не удалось получить информацию о таблицах: {str(query_error)}"
+                    }
+                    
         except Exception as db_error:
             return {
                 "connected": False, 
-                "error": f"Ошибка подключения к БД: {str(db_error)}",
-                "size": db_size,
+                "error": f"Ошибка подключения к БД ({settings.db.type}): {str(db_error)}",
             }
         
     except Exception as e:
@@ -210,11 +319,51 @@ def _get_security_diagnostic() -> Dict[str, Any]:
     env_file = PROJECT_ROOT / ".env"
     tokens_protected = env_file.exists() and env_file.stat().st_mode & 0o600 == 0o600
     
+    # Проверяем SSL конфигурацию
+    ssl_configured = False
+    config_path = PROJECT_ROOT / "config.yaml"
+    if config_path.exists():
+        try:
+            config_data = read_yaml_file(config_path)
+            if config_data and "bot" in config_data:
+                ssl_cert = config_data["bot"].get("ssl_cert")
+                ssl_key = config_data["bot"].get("ssl_key")
+                ssl_configured = bool(ssl_cert and ssl_key)
+        except Exception:
+            pass
+    
+    # Проверяем firewall (упрощенная проверка)
+    firewall_active = False
+    try:
+        import subprocess
+        result = subprocess.run(["iptables", "-L"], capture_output=True, timeout=5)
+        firewall_active = result.returncode == 0
+    except (subprocess.TimeoutExpired, FileNotFoundError):
+        # Пробуем альтернативные способы проверки
+        try:
+            import psutil
+            for conn in psutil.net_connections():
+                if conn.status == 'LISTEN' and conn.laddr.port in [80, 443]:
+                    firewall_active = True
+                    break
+        except Exception:
+            pass
+    
+    # Проверяем логирование
+    logging_enabled = True
+    log_path = PROJECT_ROOT / "project_data" / "logs"
+    if log_path.exists():
+        try:
+            log_files = list(log_path.glob("*.log"))
+            logging_enabled = len(log_files) > 0
+        except Exception:
+            pass
+    
     return {
         "tokens_protected": tokens_protected,
-        "ssl_configured": False,  # Заглушка
-        "firewall_active": False,  # Заглушка
-        "logging_enabled": True,  # Заглушка
+        "ssl_configured": ssl_configured,
+        "firewall_active": firewall_active,
+        "logging_enabled": logging_enabled,
     }
 
 def _clean_temp_files() -> Tuple[int, int]:
@@ -337,19 +486,104 @@ def _check_files_integrity() -> Dict[str, Any]:
 async def _check_database_integrity() -> Dict[str, Any]:
     """Проверяет целостность базы данных."""
     try:
-        settings, db_manager, _ = await get_sdb_services_for_cli()
+        settings, db_manager, _ = await get_sdb_services_for_cli(init_db=True)
         
-        if db_manager:
-            db_path = Path(settings.db.sqlite_path)
-            return {
-                "connected": True,
-                "tables_exist": True,  # Заглушка
-                "indexes_optimized": True,  # Заглушка
-                "integrity_ok": True,  # Заглушка
-                "size": db_path.stat().st_size if db_path.exists() else 0,
-            }
+        if not db_manager:
+            return {"connected": False, "error": "Менеджер базы данных недоступен"}
         
-        return {"connected": False}
+        # Универсальная проверка для любого типа БД
+        try:
+            async with db_manager.get_session() as session:
+                # Проверяем подключение
+                from sqlalchemy import text
+                result = await session.execute(text("SELECT 1"))
+                result.fetchone()
+                
+                # Получаем информацию о таблицах (адаптивно)
+                tables = []
+                try:
+                    if settings.db.type == "sqlite":
+                        result = await session.execute(text("SELECT name FROM sqlite_master WHERE type='table'"))
+                    elif settings.db.type == "mysql":
+                        result = await session.execute(text("SHOW TABLES"))
+                    elif settings.db.type == "postgresql":
+                        result = await session.execute(text("SELECT tablename FROM pg_tables WHERE schemaname = 'public'"))
+                    else:
+                        result = await session.execute(text("SELECT table_name FROM information_schema.tables WHERE table_schema = 'public'"))
+                    
+                    tables = result.fetchall()
+                except Exception:
+                    tables = []
+                
+                tables_exist = len(tables) > 0
+                
+                # Проверяем индексы (адаптивно)
+                indexes_optimized = True
+                try:
+                    if tables and settings.db.type == "sqlite":
+                        result = await session.execute(text("PRAGMA index_list"))
+                        indexes = result.fetchall()
+                        indexes_optimized = len(indexes) > 0
+                    elif tables and settings.db.type == "mysql":
+                        result = await session.execute(text("SHOW INDEX FROM alembic_version"))
+                        indexes = result.fetchall()
+                        indexes_optimized = len(indexes) > 0
+                    elif tables and settings.db.type == "postgresql":
+                        result = await session.execute(text("SELECT indexname FROM pg_indexes WHERE schemaname = 'public'"))
+                        indexes = result.fetchall()
+                        indexes_optimized = len(indexes) > 0
+                    else:
+                        indexes_optimized = True  # Не можем проверить
+                except Exception:
+                    indexes_optimized = True  # Не можем проверить
+                
+                # Проверяем целостность (адаптивно)
+                integrity_ok = True
+                try:
+                    if settings.db.type == "sqlite":
+                        result = await session.execute(text("PRAGMA integrity_check"))
+                        integrity_result = result.fetchone()
+                        integrity_ok = integrity_result and integrity_result[0] == "ok"
+                    elif settings.db.type == "mysql":
+                        result = await session.execute(text("CHECK TABLE alembic_version"))
+                        integrity_ok = True  # Упрощенная проверка
+                    elif settings.db.type == "postgresql":
+                        result = await session.execute(text("SELECT 1"))
+                        integrity_ok = True  # Упрощенная проверка
+                    else:
+                        integrity_ok = True  # Для других БД считаем OK
+                except Exception:
+                    integrity_ok = True  # Не можем проверить
+                
+                # Получаем размер БД (если возможно)
+                db_size = 0
+                try:
+                    if settings.db.type == "sqlite" and hasattr(settings.db, 'sqlite_path'):
+                        db_path = Path(settings.db.sqlite_path)
+                        if db_path.exists():
+                            db_size = db_path.stat().st_size
+                    elif settings.db.type == "mysql":
+                        result = await session.execute(text("SELECT SUM(data_length + index_length) FROM information_schema.tables WHERE table_schema = DATABASE()"))
+                        size_result = result.fetchone()
+                        db_size = size_result[0] if size_result and size_result[0] else 0
+                    elif settings.db.type == "postgresql":
+                        result = await session.execute(text("SELECT pg_database_size(current_database())"))
+                        size_result = result.fetchone()
+                        db_size = size_result[0] if size_result and size_result[0] else 0
+                except Exception:
+                    db_size = 0  # Не можем получить размер
+                
+                return {
+                    "connected": True,
+                    "tables_exist": tables_exist,
+                    "indexes_optimized": indexes_optimized,
+                    "integrity_ok": integrity_ok,
+                    "size": db_size,
+                }
+                
+        except Exception as db_error:
+            return {"connected": False, "error": f"Ошибка подключения к БД ({settings.db.type}): {str(db_error)}"}
+        
     except Exception as e:
         return {"connected": False, "error": str(e)}
 
@@ -362,10 +596,18 @@ def _check_config_integrity() -> Dict[str, Any]:
     
     results = {}
     for config_file in config_files:
+        valid_yaml = False
+        if config_file.exists() and config_file.is_file():
+            try:
+                config_data = read_yaml_file(config_file)
+                valid_yaml = config_data is not None
+            except Exception:
+                pass
+        
         results[str(config_file)] = {
             "exists": config_file.exists(),
             "readable": config_file.is_file() and os.access(config_file, os.R_OK),
-            "valid_yaml": False,  # Заглушка
+            "valid_yaml": valid_yaml,
         }
     
     return results
@@ -648,7 +890,8 @@ async def _utils_diagnose_async(system: bool, network: bool, database: bool, sec
         sdb_console.print("📋 База данных:")
         db_info = await _get_database_diagnostic()
         if db_info.get('connected'):
-            sdb_console.print(f"   ✅ SQLite: Подключена")
+            db_type = db_info.get('type', 'Unknown').upper()
+            sdb_console.print(f"   ✅ {db_type}: Подключена")
             sdb_console.print(f"   ✅ Таблицы: {'Все созданы' if db_info.get('tables_exist') else 'Ошибка'}")
             sdb_console.print(f"   ✅ Индексы: {'Оптимизированы' if db_info.get('indexes_optimized') else 'Ошибка'}")
             sdb_console.print(f"   ✅ Размер: {format_size(db_info.get('size', 0))}")

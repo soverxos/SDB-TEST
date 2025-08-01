@@ -230,5 +230,4 @@ def set_module_command(
         sdb_console.print("[yellow]Изменения вступят в силу после перезапуска бота.[/yellow]")
 
 if __name__ == "__main__":
-    config_app()
-# --- КОНЕЦ ФАЙЛА cli/config.py ---
+    config_app()# --- КОНЕЦ ФАЙЛА cli/config.py ---

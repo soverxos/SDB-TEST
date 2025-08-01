@@ -42,6 +42,12 @@ try:
     from cli.security import security_app
     from cli.notifications import notifications_app
     
+    # Добавляем недостающие модули
+    from cli.dev import dev_app
+    from cli.api import api_app
+    from cli.cache import cache_app
+    from cli.tasks import tasks_app
+    
     cli_main_app.add_typer(config_app, name="config", help="🔧 Управление конфигурацией.")
     cli_main_app.add_typer(db_app, name="db", help="🗄️ Управление базой данных.")
     cli_main_app.add_typer(module_app, name="module", help="🧩 Управление модулями.")
@@ -53,6 +59,12 @@ try:
     cli_main_app.add_typer(utils_app, name="utils", help="🛠️ Утилитарные инструменты.")
     cli_main_app.add_typer(security_app, name="security", help="🔒 Управление безопасностью.")
     cli_main_app.add_typer(notifications_app, name="notifications", help="🔔 Управление уведомлениями.")
+    
+    # Добавляем новые модули
+    cli_main_app.add_typer(dev_app, name="dev", help="🔧 Инструменты разработки.")
+    cli_main_app.add_typer(api_app, name="api", help="🌐 Управление API.")
+    cli_main_app.add_typer(cache_app, name="cache", help="💾 Управление кэшем системы.")
+    cli_main_app.add_typer(tasks_app, name="tasks", help="📋 Управление задачами системы.")
 
     # Отдельные команды
     from cli.run import run_command

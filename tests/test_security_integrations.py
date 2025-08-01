@@ -5,6 +5,7 @@
 
 import asyncio
 import sys
+import pytest
 from pathlib import Path
 
 # Добавляем корень проекта в sys.path
@@ -13,6 +14,7 @@ sys.path.insert(0, str(project_root))
 
 from modules.security_integrations import SecurityIntegrations
 
+@pytest.mark.asyncio
 async def test_security_integrations():
     """Тестирование интеграций безопасности"""
     print("🔒 Тестирование интеграций безопасности...")

@@ -5,8 +5,13 @@ version: "0.2.0"
 description: "Расширенный демонстрационный модуль для платформы SwiftDevBot, показывающий различные уровни доступа, FSM, работу с данными и настройками."
 author: "SDB Core Team (Example)"
 
-python_requirements: []
-sdb_module_dependencies: []
+python_requirements: 
+  - "requests>=2.25.0"
+  - "beautifulsoup4>=4.9.0"
+  - "pandas>=1.3.0"
+sdb_module_dependencies: 
+  - "core"
+  - "admin"
 
 model_definitions:
   - "modules.example_module.models.ExampleTableOne"
