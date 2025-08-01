@@ -118,11 +118,11 @@ def format_size(size_bytes: int) -> str:
     if size_bytes < 1024:
         return f"{size_bytes} B"
     elif size_bytes < 1024**2:
-        return f"{size_bytes/1024:.2f} KB"
+        return f"{size_bytes/1024:.1f} KB"
     elif size_bytes < 1024**3:
-        return f"{size_bytes/(1024**2):.2f} MB"
+        return f"{size_bytes/(1024**2):.1f} MB"
     else:
-        return f"{size_bytes/(1024**3):.2f} GB"
+        return f"{size_bytes/(1024**3):.1f} GB"
 
 # --- Новые функции для CLI команд ---
 
@@ -140,6 +140,7 @@ def _get_system_diagnostic() -> Dict[str, Any]:
         "disk_total": psutil.disk_usage('/').total,
         "disk_free": psutil.disk_usage('/').free,
         "cpu_count": psutil.cpu_count(),
+        "cpu_cores": psutil.cpu_count(logical=False),
     }
 
 def _get_network_diagnostic() -> Dict[str, Any]:

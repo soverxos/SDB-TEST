@@ -40,4 +40,5 @@ cachetools
 rich # Для красивого отображения в CLI
 
 # System Information (для админ-панели)
-psutil
+psutilfastapi>=0.104.0
+uvicorn[standard]>=0.24.0

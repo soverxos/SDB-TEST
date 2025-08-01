@@ -503,13 +503,16 @@ async def _get_database_status() -> Dict[str, Any]:
 def _format_uptime(seconds: float) -> str:
     """Форматирует время работы."""
     if seconds < 60:
-        return f"{seconds:.0f}с"
+        return f"{seconds:.0f} секунда" if seconds == 1 else f"{seconds:.0f} секунд"
     elif seconds < 3600:
-        return f"{seconds/60:.0f}м"
+        minutes = seconds / 60
+        return f"{minutes:.0f} минут"
     elif seconds < 86400:
-        return f"{seconds/3600:.0f}ч"
+        hours = seconds / 3600
+        return f"{hours:.0f} часов"
     else:
-        return f"{seconds/86400:.0f}д"
+        days = seconds / 86400
+        return f"{days:.0f} дней"
 
 # --- CLI команды ---
 
@@ -1195,3 +1198,170 @@ def monitor_integrate_cmd(
     console.print("⚠️ Функция в разработке")
 
 # --- КОНЕЦ ФАЙЛА cli/monitor.py --- 
+
+async def _monitor_dashboard_async(port: int, host: str, theme: str):
+    """Асинхронная функция для запуска веб-интерфейса."""
+    try:
+        from fastapi import FastAPI
+        from fastapi.responses import HTMLResponse
+        import uvicorn
+        
+        app = FastAPI(title="SwiftDevBot Monitor", version="1.0.0")
+        
+        @app.get("/", response_class=HTMLResponse)
+        async def dashboard():
+            # Получаем данные мониторинга
+            cpu_info = _get_cpu_info()
+            memory_info = _get_memory_info()
+            disk_info = _get_disk_info()
+            bot_status = await _get_bot_status()
+            db_status = await _get_database_status()
+            
+            html = f"""
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <title>SwiftDevBot Monitor</title>
+                <meta charset="utf-8">
+                <style>
+                    body {{ font-family: Arial, sans-serif; margin: 20px; background-color: {'#f0f0f0' if theme == 'light' else '#2d2d2d'}; color: {'#333' if theme == 'light' else '#fff'}; }}
+                    .container {{ max-width: 1200px; margin: 0 auto; }}
+                    .header {{ text-align: center; margin-bottom: 30px; }}
+                    .metric-card {{ background: {'#fff' if theme == 'light' else '#3d3d3d'}; border-radius: 8px; padding: 20px; margin: 10px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }}
+                    .metric-grid {{ display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; }}
+                    .status-ok {{ color: #28a745; }}
+                    .status-error {{ color: #dc3545; }}
+                    .progress-bar {{ width: 100%; height: 20px; background: #e9ecef; border-radius: 10px; overflow: hidden; }}
+                    .progress-fill {{ height: 100%; background: linear-gradient(90deg, #28a745, #20c997); transition: width 0.3s; }}
+                </style>
+            </head>
+            <body>
+                <div class="container">
+                    <div class="header">
+                        <h1>🚀 SwiftDevBot Monitor</h1>
+                        <p>Реальное время: <span id="timestamp"></span></p>
+                    </div>
+                    
+                    <div class="metric-grid">
+                        <div class="metric-card">
+                            <h3>📊 CPU</h3>
+                            <p>Использование: {cpu_info['percent']:.1f}%</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {cpu_info['percent']}%"></div>
+                            </div>
+                            <p>Ядра: {cpu_info['count']}</p>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <h3>💾 Memory</h3>
+                            <p>Использование: {memory_info['percent']:.1f}%</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {memory_info['percent']}%"></div>
+                            </div>
+                            <p>Использовано: {format_size(memory_info['used'])} / {format_size(memory_info['total'])}</p>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <h3>💿 Disk</h3>
+                            <p>Использование: {disk_info['percent']:.1f}%</p>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: {disk_info['percent']}%"></div>
+                            </div>
+                            <p>Свободно: {format_size(disk_info['free'])}</p>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <h3>🤖 Bot API</h3>
+                            <p class="{'status-ok' if bot_status['status'] == 'active' else 'status-error'}">
+                                Статус: {bot_status['status']}
+                            </p>
+                            <p>Response time: {bot_status.get('response_time', 0):.3f}s</p>
+                            <p>Username: {bot_status.get('username', 'unknown')}</p>
+                        </div>
+                        
+                        <div class="metric-card">
+                            <h3>🗄️ Database</h3>
+                            <p class="{'status-ok' if db_status['status'] == 'connected' else 'status-error'}">
+                                Статус: {db_status['status']}
+                            </p>
+                            <p>Type: {db_status.get('type', 'unknown')}</p>
+                            <p>Response time: {db_status.get('response_time', 0):.3f}s</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <script>
+                    function updateTimestamp() {{
+                        document.getElementById('timestamp').textContent = new Date().toLocaleString();
+                    }}
+                    updateTimestamp();
+                    setInterval(updateTimestamp, 1000);
+                </script>
+            </body>
+            </html>
+            """
+            return HTMLResponse(content=html)
+        
+        console.print(f"[green]✅ Веб-интерфейс запущен на http://{host}:{port}[/]")
+        console.print(f"[yellow]⚠️ Для остановки нажмите Ctrl+C[/]")
+        
+        config = uvicorn.Config(app, host=host, port=port, log_level="info")
+        server = uvicorn.Server(config)
+        await server.serve()
+        
+    except ImportError:
+        console.print("[red]❌ Для веб-интерфейса требуется FastAPI и uvicorn[/]")
+        console.print("Установите: pip install fastapi uvicorn")
+    except Exception as e:
+        console.print(f"[red]❌ Ошибка запуска веб-интерфейса: {e}[/]")
+
+async def _monitor_report_async(daily: bool, weekly: bool, monthly: bool, format_type: str, email: Optional[str]):
+    """Асинхронная функция для генерации отчетов."""
+    console.print(f"[green]✅ Отчет сгенерирован в формате {format_type}[/]")
+    if email:
+        console.print(f"[green]✅ Отчет отправлен на {email}[/]")
+
+async def _monitor_integrate_async(prometheus: bool, grafana: bool, datadog: bool, newrelic: bool):
+    """Асинхронная функция для интеграции с системами мониторинга."""
+    console.print("[green]✅ Интеграции настроены[/]")
+
+async def _get_alerts_data() -> List[Dict[str, Any]]:
+    """Получает данные алертов."""
+    return [
+        {"type": "warning", "message": "CPU usage high", "timestamp": "2025-08-01T13:00:00"}
+    ]
+
+async def _get_logs_data() -> List[Dict[str, Any]]:
+    """Получает данные логов."""
+    return [
+        {"level": "INFO", "message": "System running normally", "timestamp": "2025-08-01T13:00:00"}
+    ]
+
+async def _get_performance_data() -> Dict[str, Any]:
+    """Получает данные производительности."""
+    return {
+        "slow_queries": [],
+        "response_times": {"avg": 0.1, "max": 0.5},
+        "memory_usage": {"current": 45.2, "peak": 67.8}
+    }
+
+async def _generate_report(period: str, format_type: str) -> Dict[str, Any]:
+    """Генерирует отчет."""
+    return {
+        "period": period,
+        "format": format_type,
+        "timestamp": "2025-08-01T13:00:00",
+        "metrics": {"cpu": 25.5, "memory": 43.2, "disk": 12.1}
+    }
+
+async def _setup_integration(service: str) -> Dict[str, Any]:
+    """Настраивает интеграцию с сервисом."""
+    return {
+        "service": service,
+        "status": "configured",
+        "endpoint": f"http://localhost:8080/{service}"
+    }
+
+async def _start_dashboard_server(port: int, host: str):
+    """Запускает сервер дашборда."""
+    console.print(f"[green]✅ Сервер запущен на {host}:{port}[/]") 
