@@ -3,7 +3,6 @@
 from typing import Callable, Dict, Any, Awaitable, Optional
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject, User as AiogramUser # User из aiogram.types
-from loguru import logger
 
 # Импортируем наш Translator и AppSettings (для дефолтного языка и списка доступных)
 from .translator import Translator

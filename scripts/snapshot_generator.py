@@ -4,10 +4,11 @@ from pathlib import Path
 # --- Настройки ---
 OUTPUT_FILENAME = "project_snapshot.txt"
 EXCLUDE_DIRS = {
-    ".venv", "venv", "__pycache__", ".git", ".idea", ".vscode", "Docs", "locales", "scripts",
+    ".venv", "venv", "__pycache__", ".git", ".idea", ".vscode",
     "build", "dist", "*.egg-info", "node_modules",
     "Data/Cache", "Data/LogsBot", "Data/Temp", "Data/Uploads", # Из твоей структуры Data/
     "logs" # Общая папка логов, если есть
+    "modules", # Папка с модулями, если есть
 }
 EXCLUDE_FILES = {
     OUTPUT_FILENAME,  # Не включать сам файл вывода

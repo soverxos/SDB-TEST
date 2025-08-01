@@ -54,8 +54,6 @@ TEXTS_CORE_KEYBOARDS_EN = {
         "👋 Похоже, вы еще не знакомы со мной! "
         "Чтобы начать, пожалуйста, нажмите /start или введите команду /start."
     ),
-    "account_deactivated_message": "🚫 Ваш аккаунт был деактивирован. Для получения дополнительной информации, пожалуйста, свяжитесь с администратором.",
-    "account_blocked_message": "🚫 Ваш доступ к боту ограничен администратором. Пожалуйста, свяжитесь с поддержкой для уточнения деталей.",
     "profile_title": "👤 Ваш профиль",
     "profile_info_template": (
         "🆔 Ваш Telegram ID: {user_id}\n"
@@ -70,11 +68,12 @@ TEXTS_CORE_KEYBOARDS_EN = {
     "profile_select_language_title": "Выберите язык интерфейса:",
 }
 
+# --- НОВАЯ ФУНКЦИЯ ДЛЯ REPLY KEYBOARD ГЛАВНОГО МЕНЮ ---
 async def get_main_menu_reply_keyboard( 
     services_provider: 'BotServicesProvider', 
     user_telegram_id: int
 ) -> ReplyKeyboardMarkup:
-    builder = ReplyKeyboardBuilder()
+    builder = ReplyKeyboardBuilder() # Используем ReplyKeyboardBuilder
     texts = TEXTS_CORE_KEYBOARDS_EN 
     
     builder.button(text=texts["main_menu_reply_modules"])
@@ -96,14 +95,17 @@ async def get_main_menu_reply_keyboard(
         
     builder.button(text=texts["main_menu_reply_feedback"])
     
-    builder.adjust(2, 2)
+    # Расположим кнопки, например, по 2 в ряд
+    builder.adjust(2, 2) # Первые два ряда по 2 кнопки
     
     return builder.as_markup(
         resize_keyboard=True, 
-        input_field_placeholder="Выберите действие из меню..."
+        # one_time_keyboard=True # Если хотите, чтобы клавиатура скрывалась после нажатия
+        input_field_placeholder="Выберите действие из меню..." # Подсказка в поле ввода
     )
 
-async def get_main_menu_inline_keyboard(
+# Старая функция для инлайн-клавиатуры главного меню (может пригодиться для других случаев или если захотите вернуть)
+async def get_main_menu_inline_keyboard( # Переименовал для ясности
     services_provider: 'BotServicesProvider', 
     user_telegram_id: int
 ) -> InlineKeyboardMarkup:
@@ -111,13 +113,14 @@ async def get_main_menu_inline_keyboard(
     texts = TEXTS_CORE_KEYBOARDS_EN 
     
     builder.button(
-        text=texts["main_menu_inline_modules"],
+        text=texts["main_menu_inline_modules"], # Используем тексты для инлайн
         callback_data=CoreMenuNavigate(target_menu="modules_list", page=1).pack()
     )
     builder.button(
         text=texts["main_menu_inline_profile"],
         callback_data=CoreMenuNavigate(target_menu="profile").pack()
     )
+    # ... (логика кнопки админки как была) ...
     show_admin_button = False
     if user_telegram_id in services_provider.config.core.super_admins:
         show_admin_button = True
@@ -126,7 +129,7 @@ async def get_main_menu_inline_keyboard(
             async with services_provider.db.get_session() as session: 
                 if await services_provider.rbac.user_has_permission(session, user_telegram_id, PERMISSION_CORE_VIEW_ADMIN_PANEL):
                     show_admin_button = True
-        except Exception: pass
+        except Exception: pass # Логирование уже есть в get_main_menu_reply_keyboard
             
     if show_admin_button:
         builder.button(
@@ -141,7 +144,8 @@ async def get_main_menu_inline_keyboard(
     return builder.as_markup()
 
 
-async def get_modules_list_keyboard(
+async def get_modules_list_keyboard( # Остается инлайн
+    # ... (без изменений) ...
     services_provider: 'BotServicesProvider',
     user_telegram_id: int, 
     current_page: int = 1,
@@ -168,9 +172,10 @@ async def get_modules_list_keyboard(
             callback_data="core:dummy_no_modules"
         )
     else:
+        # ... (логика пагинации и кнопок модулей без изменений) ...
         total_items = len(accessible_module_entries)
         total_pages = (total_items + items_per_page - 1) // items_per_page
-        total_pages = max(1, total_pages if total_pages > 0 else 1)
+        current_page = max(1, min(current_page, total_pages if total_pages > 0 else 1))
 
         start_index = (current_page - 1) * items_per_page
         end_index = start_index + items_per_page
@@ -196,13 +201,14 @@ async def get_modules_list_keyboard(
     builder.row(
         InlineKeyboardButton(
             text=texts["navigation_back_to_main"], 
-            callback_data=CoreMenuNavigate(target_menu="main_reply").pack()
+            callback_data=CoreMenuNavigate(target_menu="main_reply").pack() # <--- ИЗМЕНЕНО: возврат к reply-меню
         )
     )
     return builder.as_markup()
 
 
-def get_welcome_confirmation_keyboard() -> InlineKeyboardMarkup:
+def get_welcome_confirmation_keyboard() -> InlineKeyboardMarkup: # Остается инлайн
+    # ... (без изменений) ...
     builder = InlineKeyboardBuilder()
     texts = TEXTS_CORE_KEYBOARDS_EN
     builder.button(
@@ -216,7 +222,8 @@ def get_welcome_confirmation_keyboard() -> InlineKeyboardMarkup:
     builder.adjust(2)
     return builder.as_markup()
 
-async def get_profile_menu_keyboard(
+async def get_profile_menu_keyboard( # Остается инлайн
+    # ... (без изменений) ...
     db_user: DBUser, 
     services_provider: 'BotServicesProvider'
 ) -> InlineKeyboardMarkup:
@@ -233,13 +240,14 @@ async def get_profile_menu_keyboard(
     builder.row(
         InlineKeyboardButton(
             text=texts["navigation_back_to_main"],
-            callback_data=CoreMenuNavigate(target_menu="main_reply").pack()
+            callback_data=CoreMenuNavigate(target_menu="main_reply").pack() # <--- ИЗМЕНЕНО: возврат к reply-меню
         )
     )
     builder.adjust(1)
     return builder.as_markup()
 
-async def get_language_selection_keyboard(
+async def get_language_selection_keyboard( # Остается инлайн
+    # ... (без изменений) ...
     current_lang_code: Optional[str],
     available_locales: List[str], 
 ) -> InlineKeyboardMarkup:
@@ -260,6 +268,7 @@ async def get_language_selection_keyboard(
     )
     return builder.as_markup()
 
+# ... (get_confirm_action_keyboard, get_close_button_keyboard без изменений, т.к. они инлайн)
 def get_confirm_action_keyboard(
     confirm_callback_data: str,
     cancel_callback_data: str,

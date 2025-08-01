@@ -89,27 +89,14 @@ class BackgroundTaskManifest(BaseModel):
     schedule: Optional[str] = Field(default=None)
     description: Optional[str] = Field(default=None)
 
-class RolePermissionsAssignment(BaseModel):
-    """Автоматическое назначение разрешений роли при установке модуля"""
-    role: str = Field(..., description="Название роли (User, Moderator, Admin)")
-    permissions: List[str] = Field(..., description="Список имен разрешений для автоматического назначения")
-
 class ModuleMetadata(BaseModel):
     homepage: Optional[HttpUrl] = Field(default=None)
     license: Optional[str] = Field(default=None)
     tags: List[str] = Field(default_factory=list)
     min_sdb_core_version: Optional[str] = Field(default=None)
-    
-    # Старая схема (для обратной совместимости)
-    assign_default_access_to_user_role: bool = Field(
+    assign_default_access_to_user_role: bool = Field( # <--- НОВОЕ ПОЛЕ
         default=False, 
         description="Если true, базовое разрешение '{module_name}.access_user_features' будет автоматически назначено роли 'User'."
-    )
-    
-    # Новая расширенная схема
-    auto_assign_permissions: Optional[List[RolePermissionsAssignment]] = Field(
-        default=None,
-        description="Автоматическое назначение разрешений ролям при установке модуля"
     )
 
     @field_validator('min_sdb_core_version', mode='before')

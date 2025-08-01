@@ -1,0 +1,1 @@
+find core/admin -name "*.py" -exec echo "--- START OF FILE {} ---" \; -exec cat {} \; -exec echo "\n--- END OF FILE {} ---" \; > admin.txt 

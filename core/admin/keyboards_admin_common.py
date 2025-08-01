@@ -83,7 +83,7 @@ def get_back_to_admin_main_menu_button() -> InlineKeyboardButton:
 def get_back_to_sdb_main_menu_button() -> InlineKeyboardButton:
     return InlineKeyboardButton(
         text=ADMIN_COMMON_TEXTS["back_to_main_menu_sdb"],
-        callback_data=CoreMenuNavigate(target_menu="main_reply").pack()
+        callback_data=CoreMenuNavigate(target_menu="main").pack()
     )
 
 async def get_admin_main_menu_keyboard( 

@@ -283,64 +283,29 @@ class RBACService:
         role_user_obj = await self._get_role_by_name(session, DEFAULT_ROLE_USER)
         module_loader = self._services_provider_ref.modules if self._services_provider_ref else None
         
-        # Автоматическое назначение разрешений модулей ролям
-        auto_assigned_permissions_summary = {}
-        if module_loader:
+        auto_assigned_module_perms_count = 0
+        if role_user_obj and role_user_obj.id and module_loader:
             for module_info in module_loader.get_all_modules_info():
-                if not module_info.manifest or not module_info.manifest.metadata:
-                    continue
-                
-                metadata = module_info.manifest.metadata
-                
-                # Обработка старой схемы (обратная совместимость)
-                # Если новая схема присутствует, пропускаем старую чтобы избежать дублирования
-                if metadata.assign_default_access_to_user_role and not metadata.auto_assign_permissions and role_user_obj and role_user_obj.id:
+                if module_info.manifest and \
+                   module_info.manifest.metadata and \
+                   module_info.manifest.metadata.assign_default_access_to_user_role:
+                    
                     base_access_perm_name = f"{module_info.name}.access_user_features"
                     perm_obj = all_permissions_map_by_name.get(base_access_perm_name)
                     if perm_obj and perm_obj.id:
                         if await self._ensure_role_has_permission_link(session, role_user_obj.id, perm_obj.id):
                             if await self.assign_permission_to_role(session, role_user_obj, perm_obj.name, auto_create_perm=False):
-                                self._logger.info(f"Автоматически назначено разрешение '{perm_obj.name}' роли '{DEFAULT_ROLE_USER}' (старая схема).")
-                                auto_assigned_permissions_summary.setdefault(DEFAULT_ROLE_USER, 0)
-                                auto_assigned_permissions_summary[DEFAULT_ROLE_USER] += 1
-                                changes_in_role_perms_assignment = True
+                                self._logger.info(f"Автоматически назначено разрешение '{perm_obj.name}' роли '{DEFAULT_ROLE_USER}'.")
+                                auto_assigned_module_perms_count += 1
+                                changes_in_role_perms_assignment = True 
                     else:
                         self._logger.warning(f"Не найдено зарегистрированное разрешение '{base_access_perm_name}' для модуля '{module_info.name}', "
                                              "хотя он помечен для авто-назначения роли User.")
-                
-                # Обработка новой расширенной схемы
-                if metadata.auto_assign_permissions:
-                    for role_assignment in metadata.auto_assign_permissions:
-                        role_name = role_assignment.role
-                        target_role = await self._get_role_by_name(session, role_name)
-                        
-                        if not target_role:
-                            self._logger.warning(f"Роль '{role_name}' не найдена для автоназначения разрешений модуля '{module_info.name}'")
-                            continue
-                        
-                        for permission_name in role_assignment.permissions:
-                            # Проверяем, что разрешение принадлежит этому модулю
-                            if not permission_name.startswith(f"{module_info.name}."):
-                                self._logger.warning(f"Разрешение '{permission_name}' не принадлежит модулю '{module_info.name}', пропускаем")
-                                continue
-                                
-                            perm_obj = all_permissions_map_by_name.get(permission_name)
-                            if perm_obj and perm_obj.id:
-                                if await self._ensure_role_has_permission_link(session, target_role.id, perm_obj.id):
-                                    if await self.assign_permission_to_role(session, target_role, perm_obj.name, auto_create_perm=False):
-                                        self._logger.info(f"Автоматически назначено разрешение '{perm_obj.name}' роли '{role_name}' для модуля '{module_info.name}'.")
-                                        auto_assigned_permissions_summary.setdefault(role_name, 0)
-                                        auto_assigned_permissions_summary[role_name] += 1
-                                        changes_in_role_perms_assignment = True
-                            else:
-                                self._logger.warning(f"Не найдено зарегистрированное разрешение '{permission_name}' для модуля '{module_info.name}'")
-        
-        # Обновляем общую статистику
-        for role_name, count in auto_assigned_permissions_summary.items():
-            if role_name in assigned_perms_summary:
-                assigned_perms_summary[role_name] += count
+        if auto_assigned_module_perms_count > 0:
+            if DEFAULT_ROLE_USER in assigned_perms_summary :
+                 assigned_perms_summary[DEFAULT_ROLE_USER] += auto_assigned_module_perms_count
             else:
-                assigned_perms_summary[role_name] = count
+                 assigned_perms_summary[DEFAULT_ROLE_USER] = auto_assigned_module_perms_count
 
 
         final_session_dirty = bool(session.new or session.dirty or session.deleted)
@@ -501,9 +466,9 @@ class RBACService:
             return False
             
         try:
-            # Удаляем только роль - связи с разрешениями удалятся автоматически благодаря CASCADE
+            await session.execute(delete(RolePermission).where(RolePermission.role_id == role.id))
             await session.delete(role)
-            self._logger.warning(f"Роль '{role.name}' (ID: {role.id}) помечена для удаления (связи с разрешениями удалятся автоматически).")
+            self._logger.warning(f"Роль '{role.name}' (ID: {role.id}) и ее связи с разрешениями помечены для удаления (ожидает commit).")
             return True
         except Exception as e:
             self._logger.error(f"Ошибка при попытке удаления роли '{role.name}': {e}", exc_info=True)

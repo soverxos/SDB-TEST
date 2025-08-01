@@ -479,14 +479,17 @@ async def cq_admin_role_delete_execute_crud(
             try: await query.message.delete() 
             except Exception: pass 
         
-        # Вместо создания фиктивного callback, просто показываем список через новый callback
-        list_callback = AdminRolesPanelNavigate(action="list")
-        await cq_admin_roles_list_entry(query, list_callback, services_provider, bot)
+        from_user_obj = query.from_user if query.from_user else types.User(id=0, is_bot=False, first_name="Unknown")
+        chat_id_for_reply = query.message.chat.id if query.message else from_user_obj.id 
+        chat_instance_str = query.chat_instance or str(chat_id_for_reply) 
+        
+        dummy_cb_for_list = types.CallbackQuery(
+            id="dummy_after_delete_cb", 
+            from_user=from_user_obj, 
+            chat_instance=chat_instance_str, 
+            data="dummy", 
+            message=None 
+        )
+        await cq_admin_roles_list_entry(dummy_cb_for_list, AdminRolesPanelNavigate(action="list"), services_provider, bot)
 
-    try:
-        await bot(query.answer(alert_text, show_alert=True))
-    except Exception as e_answer:
-        if "query is too old" in str(e_answer).lower() or "query id is invalid" in str(e_answer).lower():
-            logger.debug(f"[AdminRoleCRUD] Callback query устарел при финальном ответе: {e_answer}")
-        else:
-            logger.warning(f"[AdminRoleCRUD] Ошибка финального ответа на callback: {e_answer}")
+    await query.answer(alert_text, show_alert=True)

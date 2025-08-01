@@ -59,9 +59,9 @@ class UserService:
         db_user: DBUser,
         tg_user: aiogram_types.User,
         current_lang_code: str
-        ) -> bool:
+        ) -> bool: # Возвращает True, если были значимые изменения данных (кроме last_activity_at)
         updated_fields_log: dict = {}
-        data_changed_meaningfully = False
+        data_changed_meaningfully = False # Флаг для изменений, кроме last_activity
 
         if db_user.username != tg_user.username:
             updated_fields_log['username'] = (db_user.username, tg_user.username)
@@ -85,32 +85,22 @@ class UserService:
 
         if is_owner_check:
             if not db_user.is_active:
-                db_user.is_active = True
-                data_changed_meaningfully = True
+                db_user.is_active = True; data_changed_meaningfully = True
                 updated_fields_log['is_active (owner override)'] = (False, True)
             if db_user.is_bot_blocked:
-                db_user.is_bot_blocked = False
-                data_changed_meaningfully = True
+                db_user.is_bot_blocked = False; data_changed_meaningfully = True
                 updated_fields_log['is_bot_blocked (owner override)'] = (True, False)
-        else:
-            # --- ИСПРАВЛЕНИЕ ---
-            # Полностью удаляем автоматический сброс is_active и is_bot_blocked.
-            # Middleware уже проверил эти флаги. Если пользователь прошел,
-            # мы можем сбросить is_bot_blocked, так как он очевидно разблокировал бота.
-            # Но is_active - это флаг, управляемый только администратором.
-            # --- КОНЕЦ ИСПРАВЛЕНИЯ ---
-            if db_user.is_bot_blocked:
-                # Этот код выполняется, только если пользователь прошел middleware,
-                # что означает, что флаг is_bot_blocked был False.
-                # Но если мы хотим отслеживать, что пользователь разблокировал бота,
-                # можно оставить этот блок. Однако, правильнее это делать при ошибке отправки.
-                # Для исправления текущей проблемы, закомментируем и это.
-                # db_user.is_bot_blocked = False
-                # data_changed_meaningfully = True
-                # updated_fields_log['is_bot_blocked (user unblocked bot)'] = (True, False)
-                pass
+        else: 
+            if db_user.is_bot_blocked: 
+                updated_fields_log['is_bot_blocked (user active)'] = (db_user.is_bot_blocked, False)
+                db_user.is_bot_blocked = False 
+                data_changed_meaningfully = True
+            if not db_user.is_active: 
+                updated_fields_log['is_active (user active)'] = (db_user.is_active, True)
+                db_user.is_active = True
+                data_changed_meaningfully = True
 
-
+        # Обновляем last_activity_at всегда
         db_user.last_activity_at = datetime.now(timezone.utc)
         
         if data_changed_meaningfully:
@@ -130,13 +120,13 @@ class UserService:
         if is_owner:
             self._logger.info(f"Пользователь {tg_user.id} идентифицирован как Владелец системы.")
 
-        user_was_created = False
+        user_was_created = False # Инициализируем флаг
 
         async with self._services.db.get_session() as session:
             try:
-                db_user = await self._get_user_by_telegram_id(tg_user.id, session, load_roles=True)
+                db_user = await self._get_user_by_telegram_id(tg_user.id, session, load_roles=True) # Загружаем с ролями
                 
-                data_actually_changed_in_db = False
+                data_actually_changed_in_db = False # Флаг для реальных изменений, требующих коммита
 
                 i18n_settings: Optional["I18nSettings"] = getattr(self._services.config.core, 'i18n', None)
                 available_locales = getattr(i18n_settings, 'available_locales', ['en', 'ua']) if i18n_settings else ['en', 'ua']
@@ -155,43 +145,48 @@ class UserService:
                         last_activity_at=datetime.now(timezone.utc) 
                     )
                     session.add(db_user) 
-                    user_was_created = True
+                    user_was_created = True # Устанавливаем флаг
                     data_actually_changed_in_db = True
                     self._logger.info(f"Новый пользователь TG ID: {tg_user.id} подготовлен к созданию.")
                 else:
                     self._logger.info(f"Пользователь TG ID: {tg_user.id} (DB ID: {db_user.id}) найден. Обновление данных...")
                     if await self._update_existing_user_data(db_user, tg_user, current_lang_code):
                         data_actually_changed_in_db = True
+                    # last_activity_at обновляется в _update_existing_user_data, и если только оно изменилось,
+                    # то data_actually_changed_in_db может быть False, но сессия все равно будет dirty.
                     if db_user not in session.dirty and db_user not in session.new :
-                        session.add(db_user)
+                        session.add(db_user) # Добавляем в сессию для отслеживания, если не там
                     self._logger.info(f"Данные пользователя TG ID: {tg_user.id} отслеживаются сессией (изменения: {data_actually_changed_in_db}).")
                 
+                # Управление ролями
                 rbac_service: Optional["RBACService"] = getattr(self._services, 'rbac', None)
                 if rbac_service:
                     if user_was_created: 
-                        await session.flush([db_user])
+                        await session.flush([db_user]) # Получаем ID
                         self._logger.info(f"Новый пользователь TG ID: {tg_user.id} получил DB ID: {db_user.id} после flush.")
                         if not is_owner:
                             if await rbac_service.assign_role_to_user(session, db_user, DEFAULT_ROLE_USER):
                                 data_actually_changed_in_db = True
-                    elif db_user:
-                        if is_owner:
+                    elif db_user: # Существующий
+                        if is_owner: # Снимаем все роли с владельца
                             if db_user.roles:
                                 roles_removed_from_owner = False
-                                for role_in_db in list(db_user.roles):
+                                for role_in_db in list(db_user.roles): # Копируем список для итерации
                                     if await rbac_service.remove_role_from_user(session, db_user, role_in_db.name):
                                         roles_removed_from_owner = True
                                 if roles_removed_from_owner: data_actually_changed_in_db = True
-                        elif not db_user.roles:
+                        elif not db_user.roles: # Обычный юзер без ролей - даем User
                             if await rbac_service.assign_role_to_user(session, db_user, DEFAULT_ROLE_USER):
                                 data_actually_changed_in_db = True
                 
+                # Коммит только если были реальные изменения или сессия "грязная"
+                # (обновление last_activity_at делает сессию грязной)
                 if data_actually_changed_in_db or (session.new or session.dirty or session.deleted): 
                     self._logger.info(f"UserService: ПЕРЕД session.commit() для TG ID {tg_user.id}. "
                                      f"Data changed: {data_actually_changed_in_db}, Dirty: {session.dirty}, New: {session.new}")
                     await session.commit()
                     self._logger.success(f"UserService: ПОСЛЕ session.commit() для TG ID {tg_user.id}.")
-                    if db_user:
+                    if db_user: # Обновляем объект из БД
                         await session.refresh(db_user, attribute_names=['id', 'roles', 'direct_permissions', 'last_activity_at', 'is_active', 'is_bot_blocked'])
                         logger.debug(f"Пользователь {db_user.id} обновлен из БД после коммита в UserService.")
                 else:
@@ -199,7 +194,7 @@ class UserService:
                 
                 return db_user, user_was_created
 
-            except IntegrityError as ie:
+            except IntegrityError as ie: # Обработка гонки (пользователь создан между SELECT и INSERT)
                 await session.rollback()
                 self._logger.error(f"Ошибка IntegrityError при обработке TG ID {tg_user.id}. {ie.orig if hasattr(ie, 'orig') else ie}", exc_info=True)
                 self._logger.info(f"Повторная попытка получения пользователя TG ID {tg_user.id} после IntegrityError.")
@@ -208,11 +203,12 @@ class UserService:
                     self._logger.info(f"Пользователь TG ID {tg_user.id} найден при повторной попытке. Обновляем данные.")
                     meaningful_data_updated_on_retry = await self._update_existing_user_data(db_user_retry, tg_user, current_lang_code)
                     
+                    # Логика ролей при ретрае (убедимся, что владелец без ролей, а юзер с ролью User)
                     if rbac_service:
                         if is_owner:
                             if db_user_retry.roles:
                                 for role_retry in list(db_user_retry.roles): await rbac_service.remove_role_from_user(session, db_user_retry, role_retry.name)
-                        elif not db_user_retry.roles:
+                        elif not db_user_retry.roles: # Если это не владелец и у него нет ролей
                              await rbac_service.assign_role_to_user(session, db_user_retry, DEFAULT_ROLE_USER)
                     
                     if meaningful_data_updated_on_retry or (session.new or session.dirty or session.deleted):
@@ -220,7 +216,7 @@ class UserService:
                         await session.commit()
                         self._logger.success(f"UserService (retry): ПОСЛЕ session.commit() для TG ID {tg_user.id}.")
                         await session.refresh(db_user_retry, attribute_names=['id', 'roles', 'direct_permissions', 'last_activity_at', 'is_active', 'is_bot_blocked'])
-                    return db_user_retry, False
+                    return db_user_retry, False # False, т.к. он уже существовал на момент ретрая
                 self._logger.error(f"Пользователь TG ID {tg_user.id} не найден даже после IntegrityError и повторной попытки.")
                 return None, False
             except Exception as e: 

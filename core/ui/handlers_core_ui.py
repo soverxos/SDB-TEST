@@ -65,8 +65,7 @@ async def show_main_menu_reply(
             if message_or_query.message.reply_markup: 
                  await message_or_query.message.edit_reply_markup(reply_markup=None)
         except Exception as e_del_edit:
-            # Обычная ситуация - сообщение могло быть удалено пользователем или устареть
-            logger.debug(f"Не удалось изменить/удалить старое сообщение перед показом reply menu: {e_del_edit}")
+            logger.warning(f"Не удалось изменить/удалить старое сообщение перед показом reply menu: {e_del_edit}")
     
     await bot.send_message(target_chat_id, text_to_send, reply_markup=keyboard)
     
@@ -250,13 +249,7 @@ async def cq_nav_to_main_menu_reply(
     sdb_user: DBUser,
     state: FSMContext 
 ):
-    logger.info(f"[{MODULE_NAME_FOR_LOG}] Обработка кнопки 'Главное меню SDB' для пользователя {sdb_user.telegram_id}")
-    try:
-        await show_main_menu_reply(query, bot, services_provider, sdb_user, state=state)
-        logger.info(f"[{MODULE_NAME_FOR_LOG}] Главное меню успешно показано для пользователя {sdb_user.telegram_id}")
-    except Exception as e:
-        logger.error(f"[{MODULE_NAME_FOR_LOG}] Ошибка при показе главного меню для пользователя {sdb_user.telegram_id}: {e}", exc_info=True)
-        await query.answer("Произошла ошибка при переходе в главное меню", show_alert=True) 
+    await show_main_menu_reply(query, bot, services_provider, sdb_user, state=state) 
 
 
 async def send_modules_list_message(
@@ -504,15 +497,3 @@ async def cq_service_action_delete_message(query: types.CallbackQuery, bot: Bot)
     except Exception as e:
         logger.error(f"[{MODULE_NAME_FOR_LOG}] Ошибка при удалении сообщения {message_id} для user {user_id}: {e}", exc_info=True)
         await query.answer("Ошибка при удалении сообщения.", show_alert=True)
-
-
-# Добавляем отладочный обработчик для всех CoreMenuNavigate callbacks в конце
-@core_ui_router.callback_query(CoreMenuNavigate.filter())
-async def debug_core_menu_navigate_fallback(
-    query: types.CallbackQuery,
-    callback_data: CoreMenuNavigate,
-    services_provider: 'BotServicesProvider'
-):
-    user_id = query.from_user.id
-    logger.warning(f"[{MODULE_NAME_FOR_LOG}] FALLBACK: Необработанный CoreMenuNavigate callback от пользователя {user_id}: target_menu='{callback_data.target_menu}', page={callback_data.page}, action='{callback_data.action}'")
-    await query.answer(f"Обработчик для '{callback_data.target_menu}' не найден", show_alert=True)

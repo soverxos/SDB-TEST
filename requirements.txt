@@ -7,7 +7,7 @@ python-dotenv
 pydantic # Используем Pydantic v2
 pydantic-settings
 pydantic-extra-types # Для DSN и других доп. типов
-PyYAML
+PyYAML>=6.0
 
 # Database (SQLAlchemy & Alembic)
 SQLAlchemy[asyncio] # [asyncio] для поддержки асинхронных драйверов
@@ -39,13 +39,3 @@ rich # Для красивого отображения в CLI
 
 # System Information (для админ-панели)
 psutil
-
-# Redis (опционально, только если используется Redis кэш)
-# Чтобы использовать Redis кэш, раскомментируйте и установите:
-# redis>=4.5.0
-
-# Testing dependencies
-pytest>=7.0.0
-pytest-asyncio>=0.21.0
-pytest-mock>=3.10.0
-yt-dlp>=2025.7.21  # YouTube downloader with latest anti-bot fixes

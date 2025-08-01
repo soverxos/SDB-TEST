@@ -41,11 +41,11 @@ async def cq_admin_roles_list_entry(
                 has_perm_to_view_list = await services_provider.rbac.user_has_permission(session, admin_user_id, PERMISSION_CORE_ROLES_VIEW)
             except Exception as e_perm_check_list:
                 logger.error(f"[{MODULE_NAME_FOR_LOG}] Ошибка проверки права PERMISSION_CORE_ROLES_VIEW для user {admin_user_id}: {e_perm_check_list}")
-                await bot(query.answer("Ошибка проверки прав.", show_alert=True))
+                await query.answer("Ошибка проверки прав.", show_alert=True) 
                 return
 
         if not has_perm_to_view_list:
-            await bot(query.answer("У вас нет прав для просмотра списка ролей.", show_alert=True)) 
+            await query.answer("У вас нет прав для просмотра списка ролей.", show_alert=True) 
             return
         
         all_roles: List[DBRole] = await services_provider.rbac.get_all_roles(session)
@@ -56,56 +56,26 @@ async def cq_admin_roles_list_entry(
         target_chat_id = query.message.chat.id if query.message else admin_user_id
 
         try:
-            if query.message and text != query.message.text: 
-                await bot(query.message.edit_text(text, reply_markup=keyboard))
+            if query.message and (query.message.text != text or query.message.reply_markup != keyboard):
+                await query.message.edit_text(text, reply_markup=keyboard)
                 logger.debug(f"[{MODULE_NAME_FOR_LOG}] Сообщение со списком ролей отредактировано.")
             elif not query.message: 
                  await bot.send_message(target_chat_id, text, reply_markup=keyboard)
                  logger.debug(f"[{MODULE_NAME_FOR_LOG}] Сообщение со списком ролей отправлено (т.к. query.message был None).")
             else:
                 logger.trace(f"[{MODULE_NAME_FOR_LOG}] Сообщение списка ролей не изменено.")
-            
-            # Попытка ответить на callback query
-            try:
-                await bot(query.answer())
-            except Exception as e_answer:
-                if "query is too old" in str(e_answer).lower() or "query id is invalid" in str(e_answer).lower():
-                    logger.debug(f"[{MODULE_NAME_FOR_LOG}] Callback query устарел, пропускаем answer: {e_answer}")
-                else:
-                    logger.warning(f"[{MODULE_NAME_FOR_LOG}] Ошибка при ответе на callback query: {e_answer}")
+            await query.answer()
         except TelegramBadRequest as e_tbr: # Используем импортированный TelegramBadRequest
             if query.message and "message to edit not found" in str(e_tbr).lower(): 
                 logger.warning(f"[{MODULE_NAME_FOR_LOG}] Сообщение для редактирования не найдено, отправка нового: {e_tbr}")
                 await bot.send_message(target_chat_id, text, reply_markup=keyboard)
-                try:
-                    await bot(query.answer())
-                except Exception as e_answer:
-                    if "query is too old" in str(e_answer).lower() or "query id is invalid" in str(e_answer).lower():
-                        logger.debug(f"[{MODULE_NAME_FOR_LOG}] Callback query устарел при fallback: {e_answer}")
-                    else:
-                        logger.warning(f"[{MODULE_NAME_FOR_LOG}] Ошибка answer при fallback: {e_answer}")
+                await query.answer()
             elif "message is not modified" in str(e_tbr).lower():
                 logger.trace(f"[{MODULE_NAME_FOR_LOG}] Сообщение списка ролей не изменено (поймано исключение).")
-                try:
-                    await bot(query.answer())
-                except Exception as e_answer:
-                    if "query is too old" in str(e_answer).lower() or "query id is invalid" in str(e_answer).lower():
-                        logger.debug(f"[{MODULE_NAME_FOR_LOG}] Callback query устарел: {e_answer}")
+                await query.answer()
             else:
                 logger.warning(f"[{MODULE_NAME_FOR_LOG}] Ошибка Telegram BadRequest при редактировании/отправке списка ролей: {e_tbr}")
-                try:
-                    await bot(query.answer("Ошибка отображения списка.", show_alert=True))
-                except Exception as e_answer:
-                    if "query is too old" in str(e_answer).lower() or "query id is invalid" in str(e_answer).lower():
-                        logger.debug(f"[{MODULE_NAME_FOR_LOG}] Callback query устарел при ошибке: {e_answer}")
-                    else:
-                        logger.warning(f"[{MODULE_NAME_FOR_LOG}] Ошибка answer при ошибке: {e_answer}")
+                await query.answer("Ошибка отображения списка.", show_alert=True)
         except Exception as e_edit:
             logger.error(f"[{MODULE_NAME_FOR_LOG}] Непредвиденная ошибка в cq_admin_roles_list_entry: {e_edit}", exc_info=True)
-            try:
-                await bot(query.answer("Ошибка отображения списка ролей.", show_alert=True))
-            except Exception as e_answer:
-                if "query is too old" in str(e_answer).lower() or "query id is invalid" in str(e_answer).lower():
-                    logger.debug(f"[{MODULE_NAME_FOR_LOG}] Callback query устарел при непредвиденной ошибке: {e_answer}")
-                else:
-                    logger.warning(f"[{MODULE_NAME_FOR_LOG}] Ошибка answer при непредвиденной ошибке: {e_answer}")
+            await query.answer("Ошибка отображения списка ролей.", show_alert=True)

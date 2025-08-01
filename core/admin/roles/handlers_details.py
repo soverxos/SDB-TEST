@@ -45,7 +45,7 @@ async def cq_admin_role_view_details_entry(
         
     logger.info(f"[{MODULE_NAME_FOR_LOG}] Администратор {admin_user_id} запросил детали роли с DB ID: {target_role_db_id}")
 
-    async with services_provider.db.get_session() as session: 
+    async with services_provider.db.get_session() as session: # type: AsyncSession
         has_perm_to_view = False
         is_owner_from_config = admin_user_id in services_provider.config.core.super_admins
         if is_owner_from_config:
@@ -74,7 +74,7 @@ async def cq_admin_role_view_details_entry(
         
         logger.debug(f"[{MODULE_NAME_FOR_LOG}] Роль '{role.name}' найдена, генерация текста и клавиатуры...")
         permissions_list_str = "\n".join(
-            [f"  ▫️ {hcode(p.description or p.name)} {hitalic(f'({p.name})' if p.description else '')}" for p in sorted(role.permissions, key=lambda x: x.name)]
+            [f"  ▫️ {hcode(p.name)} ({hitalic(p.description or 'без описания')})" for p in sorted(role.permissions, key=lambda x: x.name)]
         ) if role.permissions else "  (нет назначенных разрешений)"
 
         text_parts = [

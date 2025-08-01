@@ -160,19 +160,6 @@ class BotServicesProvider:
         
         self._logger.info("🏁 Процедура закрытия всех сервисов SDB завершена.")
     
-    async def shutdown(self) -> None:
-        """Alias для close_services() для удобства использования."""
-        await self.close_services()
-    
-    async def __aenter__(self):
-        """Асинхронный контекстный менеджер - вход."""
-        await self.setup_services()
-        return self
-    
-    async def __aexit__(self, exc_type, exc_val, exc_tb):
-        """Асинхронный контекстный менеджер - выход."""
-        await self.close_services()
-    
     @property
     def config(self) -> 'AppSettings':
         return self._settings

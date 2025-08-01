@@ -80,8 +80,8 @@ async def cq_admin_user_view_details_entry(
     admin_user_id = query.from_user.id
     target_user_db_id: Optional[int] = None
 
-    if callback_data.user_id is not None:
-        try: target_user_db_id = int(str(callback_data.user_id))
+    if callback_data.item_id is not None:
+        try: target_user_db_id = int(str(callback_data.item_id))
         except ValueError:
             await query.answer("Ошибка: неверный формат ID пользователя.", show_alert=True); return
     
@@ -111,8 +111,8 @@ async def cq_admin_user_toggle_active_details(
 ):
     admin_user_id = query.from_user.id
     target_user_db_id: Optional[int] = None
-    if callback_data.user_id is not None:
-        try: target_user_db_id = int(str(callback_data.user_id))
+    if callback_data.item_id is not None:
+        try: target_user_db_id = int(str(callback_data.item_id))
         except ValueError: pass
     
     if target_user_db_id is None:
@@ -158,8 +158,8 @@ async def cq_admin_user_toggle_blocked_details(
 ):
     admin_user_id = query.from_user.id
     target_user_db_id: Optional[int] = None
-    if callback_data.user_id is not None:
-        try: target_user_db_id = int(str(callback_data.user_id))
+    if callback_data.item_id is not None:
+        try: target_user_db_id = int(str(callback_data.item_id))
         except ValueError: pass
     if target_user_db_id is None:
         await query.answer("Ошибка: ID пользователя не указан.", show_alert=True); return

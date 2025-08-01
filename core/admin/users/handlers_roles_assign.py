@@ -31,11 +31,11 @@ async def cq_admin_user_edit_roles_start_assign(
 ):
     admin_user_id = query.from_user.id
     target_user_db_id: Optional[int] = None
-    if callback_data.user_id is not None:
+    if callback_data.item_id is not None:
         try: 
-            target_user_db_id = int(str(callback_data.user_id))
+            target_user_db_id = int(str(callback_data.item_id))
         except ValueError:
-            logger.warning(f"[{MODULE_NAME_FOR_LOG}] Некорректный user_id '{callback_data.user_id}' для edit_roles_start.")
+            logger.warning(f"[{MODULE_NAME_FOR_LOG}] Некорректный item_id '{callback_data.item_id}' для edit_roles_start.")
             await query.answer("Ошибка: неверный ID пользователя.", show_alert=True)
             return
     
@@ -84,11 +84,11 @@ async def cq_admin_user_toggle_role_assign(
     target_user_db_id: Optional[int] = None
     role_to_toggle_id: Optional[int] = None
 
-    if callback_data.user_id is not None: 
+    if callback_data.item_id is not None: 
         try: 
-            target_user_db_id = int(str(callback_data.user_id))
+            target_user_db_id = int(str(callback_data.item_id))
         except ValueError: 
-            logger.warning(f"[{MODULE_NAME_FOR_LOG}] Некорректный user_id '{callback_data.user_id}' для toggle_role.")
+            logger.warning(f"[{MODULE_NAME_FOR_LOG}] Некорректный item_id '{callback_data.item_id}' для toggle_role.")
             pass 
     
     if callback_data.role_id is not None: 

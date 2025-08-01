@@ -38,7 +38,7 @@ async def cq_admin_user_edit_direct_perms_entry( # Переименовано д
     state: FSMContext
 ):
     admin_user_id = query.from_user.id
-    target_user_db_id = callback_data.user_id
+    target_user_db_id = callback_data.item_id
 
     if target_user_db_id is None:
         await query.answer("Ошибка: ID пользователя не указан.", show_alert=True); return
@@ -133,18 +133,17 @@ async def cq_admin_user_toggle_direct_perm(
 
         user_has_direct_perm = permission_to_modify in target_user.direct_permissions
         alert_text, action_performed = "", False
-        permission_display_name = permission_to_modify.description or permission_to_modify.name
 
         if user_has_direct_perm:
             if await services_provider.rbac.remove_direct_permission_from_user(session, target_user, permission_to_modify.name):
                 action_performed = True
-                alert_text = f"Прямое разрешение '{permission_display_name}' снято."
-            else: alert_text = f"Не удалось снять прямое разрешение '{permission_display_name}'."
+                alert_text = f"Прямое разрешение '{permission_to_modify.name}' снято."
+            else: alert_text = f"Не удалось снять прямое разрешение '{permission_to_modify.name}'."
         else:
             if await services_provider.rbac.assign_direct_permission_to_user(session, target_user, permission_to_modify.name, auto_create_perm=False):
                 action_performed = True
-                alert_text = f"Прямое разрешение '{permission_display_name}' назначено."
-            else: alert_text = f"Не удалось назначить прямое разрешение '{permission_display_name}'."
+                alert_text = f"Прямое разрешение '{permission_to_modify.name}' назначено."
+            else: alert_text = f"Не удалось назначить прямое разрешение '{permission_to_modify.name}'."
         
         if action_performed:
             try: await session.commit(); logger.info(f"[{MODULE_NAME_FOR_LOG}] {alert_text} для User ID: {target_user.id}"); await session.refresh(target_user, attribute_names=['direct_permissions'])

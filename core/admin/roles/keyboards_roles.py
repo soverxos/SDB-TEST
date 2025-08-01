@@ -260,8 +260,7 @@ async def get_admin_role_edit_permissions_keyboard_local(
             for perm in paginated_perms:
                 is_assigned = perm.id in role_permission_ids
                 prefix = "✅ " if is_assigned else "⬜ "
-                # Используем человекочитаемое описание вместо технического названия
-                button_text = f"{prefix}{perm.description or perm.name}"
+                button_text = f"{prefix}{perm.name}"
                 if perm.id is None: continue 
                 builder.button(text=button_text, callback_data=AdminRolesPanelNavigate(action="toggle_perm", item_id=target_role.id, permission_id=perm.id, category_key=category_key, entity_name=entity_name, page=current_perm_page).pack())
             builder.adjust(1)

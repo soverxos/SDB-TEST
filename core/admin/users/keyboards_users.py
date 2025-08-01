@@ -60,7 +60,7 @@ async def get_admin_users_list_keyboard_local(
 
             builder.button(
                 text=f"{status_prefix}{user_display}",
-                callback_data=AdminUsersPanelNavigate(action="view", user_id=user_obj.id).pack()
+                callback_data=AdminUsersPanelNavigate(action="view", item_id=user_obj.id).pack()
             )
         builder.adjust(1)
 
@@ -112,7 +112,7 @@ async def get_admin_user_details_keyboard_local(
     # --- КОНЕЦ ИСПРАВЛЕНИЯ ---
         builder.button(
             text=USERS_MGMT_TEXTS["user_action_direct_perms"],
-            callback_data=AdminUsersPanelNavigate(action="edit_direct_perms_start", user_id=target_user.id).pack()
+            callback_data=AdminUsersPanelNavigate(action="edit_direct_perms_start", item_id=target_user.id).pack()
         )
 
     if not target_user_is_owner: 
@@ -120,7 +120,7 @@ async def get_admin_user_details_keyboard_local(
            await rbac.user_has_permission(session, current_admin_tg_id, PERMISSION_CORE_USERS_ASSIGN_ROLES):
             builder.button(
                 text=USERS_MGMT_TEXTS["user_action_change_roles"],
-                callback_data=AdminUsersPanelNavigate(action="edit_roles_start", user_id=target_user.id).pack()
+                callback_data=AdminUsersPanelNavigate(action="edit_roles_start", item_id=target_user.id).pack()
             )
 
         if current_admin_is_owner or \
@@ -128,12 +128,12 @@ async def get_admin_user_details_keyboard_local(
             active_status_text = "Выкл 💤" if target_user.is_active else "Вкл ✅" 
             builder.button(
                 text=USERS_MGMT_TEXTS["user_action_toggle_active"].format(status=active_status_text),
-                callback_data=AdminUsersPanelNavigate(action="toggle_active", user_id=target_user.id).pack()
+                callback_data=AdminUsersPanelNavigate(action="toggle_active", item_id=target_user.id).pack()
             )
             blocked_status_text = "Да 🚫" if target_user.is_bot_blocked else "Нет ✅" 
             builder.button(
                 text=USERS_MGMT_TEXTS["user_action_toggle_blocked"].format(status=blocked_status_text),
-                callback_data=AdminUsersPanelNavigate(action="toggle_blocked", user_id=target_user.id).pack()
+                callback_data=AdminUsersPanelNavigate(action="toggle_blocked", item_id=target_user.id).pack()
             )
     
     if builder.export(): 
@@ -180,7 +180,7 @@ async def get_admin_user_edit_roles_keyboard_local(
                 text=f"{prefix}{role.name}",
                 callback_data=AdminUsersPanelNavigate(
                     action="toggle_role", 
-                    user_id=target_user.id, 
+                    item_id=target_user.id, 
                     role_id=role.id 
                 ).pack()
             )
@@ -193,7 +193,7 @@ async def get_admin_user_edit_roles_keyboard_local(
     builder.adjust(1)
     builder.row(InlineKeyboardButton(
         text=USERS_MGMT_TEXTS["back_to_user_details"], 
-        callback_data=AdminUsersPanelNavigate(action="view", user_id=target_user.id).pack()
+        callback_data=AdminUsersPanelNavigate(action="view", item_id=target_user.id).pack()
     ))
     return builder.as_markup()
 
@@ -222,20 +222,20 @@ async def get_user_direct_perms_keyboard(
     # Кнопка "Назад к деталям пользователя"
     builder.row(InlineKeyboardButton(
         text=texts["back_to_user_details"],
-        callback_data=AdminUsersPanelNavigate(action="view", user_id=target_user.id).pack()
+        callback_data=AdminUsersPanelNavigate(action="view", item_id=target_user.id).pack()
     ))
 
     # --- Уровень 1: Выбор основной категории разрешений (Ядро / Модули) ---
     if not category_key:
         builder.button(
             text=ADMIN_COMMON_TEXTS["perm_category_core"], # Используем общие тексты для категорий
-            callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", user_id=target_user.id, category_key="core", page=1).pack()
+            callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", item_id=target_user.id, category_key="core", page=1).pack()
         )
         module_perms_exist = any(not p.name.startswith("core.") for p in all_system_permissions)
         if module_perms_exist:
             builder.button(
                 text=ADMIN_COMMON_TEXTS["perm_category_modules"],
-                callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", user_id=target_user.id, category_key="module", page=1).pack()
+                callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", item_id=target_user.id, category_key="module", page=1).pack()
             )
         builder.adjust(1)
         return builder.as_markup()
@@ -268,9 +268,9 @@ async def get_user_direct_perms_keyboard(
                     known_prefixes = list(CORE_PERM_PREFIXES_MAP_USERS.values())
                     if any(p.name.startswith("core.") and not any(p.name.startswith(kp) for kp in known_prefixes) for p in all_system_permissions): has_perms_in_group = True
                 if has_perms_in_group:
-                    builder.button(text=group_display_name, callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", user_id=target_user.id, category_key="core", entity_name=group_key, page=1).pack())
+                    builder.button(text=group_display_name, callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", item_id=target_user.id, category_key="core", entity_name=group_key, page=1).pack())
             builder.adjust(1)
-            builder.row(InlineKeyboardButton(text=texts["back_to_direct_perm_categories"], callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", user_id=target_user.id).pack()))
+            builder.row(InlineKeyboardButton(text=texts["back_to_direct_perm_categories"], callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", item_id=target_user.id).pack()))
         else: # Показываем разрешения для выбранной подкатегории ядра
             if entity_name == "other":
                 known_prefixes = list(CORE_PERM_PREFIXES_MAP_USERS.values())
@@ -278,7 +278,7 @@ async def get_user_direct_perms_keyboard(
             elif entity_name in CORE_PERM_PREFIXES_MAP_USERS:
                 prefix = CORE_PERM_PREFIXES_MAP_USERS[entity_name]
                 permissions_to_display_final = [p for p in all_system_permissions if p.name.startswith(prefix)]
-            builder.row(InlineKeyboardButton(text=texts["back_to_direct_perm_core_groups"], callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", user_id=target_user.id, category_key="core").pack()))
+            builder.row(InlineKeyboardButton(text=texts["back_to_direct_perm_core_groups"], callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", item_id=target_user.id, category_key="core").pack()))
 
     elif category_key == "module":
         if not services.modules: 
@@ -298,12 +298,12 @@ async def get_user_direct_perms_keyboard(
             if not sorted_module_names: builder.button(text=ADMIN_COMMON_TEXTS["no_modules_with_perms"], callback_data="dummy_no_mod_perms_for_user")
             else:
                 for mod_name in sorted_module_names:
-                    builder.button(text=f"🧩 {module_display_names.get(mod_name, mod_name)}", callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", user_id=target_user.id, category_key="module", entity_name=mod_name, page=1).pack())
+                    builder.button(text=f"🧩 {module_display_names.get(mod_name, mod_name)}", callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", item_id=target_user.id, category_key="module", entity_name=mod_name, page=1).pack())
             builder.adjust(1)
-            builder.row(InlineKeyboardButton(text=texts["back_to_direct_perm_categories"], callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", user_id=target_user.id).pack()))
+            builder.row(InlineKeyboardButton(text=texts["back_to_direct_perm_categories"], callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", item_id=target_user.id).pack()))
         else: 
             permissions_to_display_final = module_permissions_map.get(entity_name, [])
-            builder.row(InlineKeyboardButton(text=texts["back_to_direct_perm_module_list"], callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", user_id=target_user.id, category_key="module").pack()))
+            builder.row(InlineKeyboardButton(text=texts["back_to_direct_perm_module_list"], callback_data=AdminUsersPanelNavigate(action="direct_perms_nav", item_id=target_user.id, category_key="module").pack()))
     
     if permissions_to_display_final:
         permissions_to_display_final.sort(key=lambda p: p.name)
@@ -329,7 +329,7 @@ async def get_user_direct_perms_keyboard(
                 elif is_via_role: # Не прямое, но через роль
                     status_prefix = texts["perm_status_role"] # ☑️
                 
-                button_text = f"{status_prefix} {perm.description or perm.name}"
+                button_text = f"{status_prefix} {perm.name}"
                 
                 can_toggle_locally = not (is_via_role and not is_direct)
 
@@ -338,7 +338,7 @@ async def get_user_direct_perms_keyboard(
                         text=button_text,
                         callback_data=AdminUsersPanelNavigate(
                             action="toggle_direct_perm", 
-                            user_id=target_user.id, 
+                            item_id=target_user.id, 
                             permission_id=perm.id,
                             category_key=category_key, 
                             entity_name=entity_name, 
@@ -354,7 +354,7 @@ async def get_user_direct_perms_keyboard(
 
             if total_perm_pages > 1:
                 pagination_row_perms = []
-                nav_cb_data_base = AdminUsersPanelNavigate(action="direct_perms_nav", user_id=target_user.id, category_key=category_key, entity_name=entity_name)
+                nav_cb_data_base = AdminUsersPanelNavigate(action="direct_perms_nav", item_id=target_user.id, category_key=category_key, entity_name=entity_name)
                 if current_perm_page > 1: pagination_row_perms.append(InlineKeyboardButton(text=ADMIN_COMMON_TEXTS["pagination_prev"], callback_data=nav_cb_data_base.model_copy(update={"page": current_perm_page - 1}).pack()))
                 pagination_row_perms.append(InlineKeyboardButton(text=f"{current_perm_page}/{total_perm_pages}", callback_data="dummy_direct_perm_page"))
                 if current_perm_page < total_perm_pages: pagination_row_perms.append(InlineKeyboardButton(text=ADMIN_COMMON_TEXTS["pagination_next"], callback_data=nav_cb_data_base.model_copy(update={"page": current_perm_page + 1}).pack()))

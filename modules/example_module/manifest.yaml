@@ -1,0 +1,74 @@
+# modules/example_module/manifest.yaml
+name: "example_module"
+display_name: "Пример Модуля SDB (Расширенный)"
+version: "0.2.0"
+description: "Расширенный демонстрационный модуль для платформы SwiftDevBot, показывающий различные уровни доступа, FSM, работу с данными и настройками."
+author: "SDB Core Team (Example)"
+
+python_requirements: []
+sdb_module_dependencies: []
+
+model_definitions:
+  - "modules.example_module.models.ExampleTableOne"
+  - "modules.example_module.models.AnotherExampleTable"
+  - "modules.example_module.models.UserNote"
+
+commands:
+  - command: "example"
+    description: "Показать главное меню Примерного Модуля"
+    icon: "🌟"
+    category: "Примеры"
+    admin_only: false
+  - command: "fsm_example"
+    description: "🗣️ Запустить FSM диалог (пример)"
+    icon: "🗣️"
+    category: "Примеры"
+    admin_only: false
+  - command: "my_notes"
+    description: "📝 Мои заметки (Примерный Модуль)"
+    icon: "📝"
+    category: "Примеры"
+    admin_only: false
+
+permissions: 
+  - name: "example_module.access_user_features"
+    description: "Доступ к основному пользовательскому интерфейсу и функциям модуля Example."
+  - name: "example_module.view_module_settings"
+    description: "Просмотр глобальных настроек модуля Example."
+  - name: "example_module.view_secret_info"
+    description: "Просмотр секретной информации в модуле Example."
+  - name: "example_module.perform_basic_action"
+    description: "Выполнение базового действия в модуле Example."
+  - name: "example_module.perform_advanced_action"
+    description: "Выполнение продвинутого/привилегированного действия в модуле Example."
+  - name: "example_module.manage_own_notes"
+    description: "Управление (создание, просмотр, удаление) собственными заметками в модуле Example."
+  - name: "example_module.admin_view_all_notes"
+    description: "[АДМИН] Просмотр всех заметок всех пользователей в модуле Example."
+  - name: "example_module.admin_manage_module"
+    description: "[АДМИН] Общие административные действия для модуля Example."
+
+settings:
+  example_setting_string:
+    type: "string"
+    label: "Пример строковой настройки"
+    description: "Введите сюда какой-нибудь текст для примера."
+    default: "Привет из примера!"
+    required: false
+  example_setting_bool:
+    type: "bool"
+    label: "Пример булевой настройки"
+    description: "Включить или выключить что-то."
+    default: true
+  max_notes_per_user:
+    type: "int"
+    label: "Макс. заметок на пользователя"
+    description: "Максимальное количество заметок, которое может создать один пользователь."
+    default: 5
+    min_value: 1
+    max_value: 100
+
+metadata:
+  min_sdb_core_version: "0.1.0"
+  tags: ["example", "demonstration", "tutorial", "fsm", "crud", "permissions"]
+  assign_default_access_to_user_role: true

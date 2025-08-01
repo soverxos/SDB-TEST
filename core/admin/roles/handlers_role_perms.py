@@ -132,20 +132,17 @@ async def cq_admin_role_toggle_permission(
 
         role_has_this_perm = permission_to_modify in target_role.permissions
         alert_text, action_performed = "", False
-        
-        # Получаем человекочитаемое название разрешения
-        permission_display_name = permission_to_modify.description or permission_to_modify.name
 
         if role_has_this_perm:
             if await services_provider.rbac.remove_permission_from_role(session, target_role, permission_to_modify.name):
                 action_performed = True
-                alert_text = f"Разрешение '{permission_display_name}' снято с роли."
-            else: alert_text = f"Не удалось снять разрешение '{permission_display_name}'."
+                alert_text = f"Разрешение '{permission_to_modify.name}' снято с роли."
+            else: alert_text = f"Не удалось снять разрешение '{permission_to_modify.name}'."
         else:
             if await services_provider.rbac.assign_permission_to_role(session, target_role, permission_to_modify.name, auto_create_perm=False):
                 action_performed = True
-                alert_text = f"Разрешение '{permission_display_name}' назначено роли."
-            else: alert_text = f"Не удалось назначить разрешение '{permission_display_name}'."
+                alert_text = f"Разрешение '{permission_to_modify.name}' назначено роли."
+            else: alert_text = f"Не удалось назначить разрешение '{permission_to_modify.name}'."
         
         if action_performed:
             try: await session.commit(); logger.info(f"[{MODULE_NAME_FOR_LOG}] {alert_text} для Role ID: {target_role.id}"); await session.refresh(target_role, attribute_names=['permissions'])

@@ -1,0 +1,162 @@
+# === Swift / Xcode ===
+.build/
+DerivedData/
+*.xcworkspace
+*.xcodeproj/
+*.xcuserdata/
+*.swiftpm/
+Package.resolved
+TEST/
+
+# Swift Playgrounds
+timeline.xctimeline
+playground.xcworkspace
+
+# === Python ===
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# C extensions
+*.so
+
+# Distribution / packaging
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+project_data/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+pip-wheel-metadata/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+
+# PyInstaller
+*.manifest
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Unit test / coverage reports
+htmlcov/
+.tox/
+.nox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+.pytest_cache/
+
+# Virtual environments
+.venv/
+venv/
+ENV/
+env/ # Оставим один 'env/'
+env.bak/
+venv.bak/
+
+# pipenv/poetry/pyproject artifacts
+Pipfile.lock
+poetry.lock
+pyproject.toml.lock
+
+# Jupyter Notebook
+.ipynb_checkpoints
+
+# IPython
+profile_default/
+ipython_config.py
+
+# pyenv
+.python-version
+
+# celery beat schedule file
+celerybeat-schedule
+
+# SageMath parsed files
+*.sage.py
+
+# Spyder project settings
+.spyderproject
+.spyproject
+
+# Rope project settings
+.ropeproject
+
+# mkdocs documentation
+/site
+
+# mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pyre type checker
+.pyre/
+
+# === General ===
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+*.lnk
+
+# Linux
+*~
+
+# Logs and temp
+*.log
+*.tmp
+*.swp
+*.swo
+*.bak
+*.backup
+# *~ # Уже есть выше
+
+# VSCode / JetBrains IDEs
+.vscode/
+.idea/
+# *.swp # Уже есть выше
+# *.swo # Уже есть выше
+
+# === Database ===
+*.db
+*.sqlite
+*.sqlite3
+
+# === Environment ===
+.env
+.env.local
+.env.*.local
